@@ -1,0 +1,50 @@
+[CPU]
+model               : Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz
+core                : 10
+thread              : 20
+using               : 12.9 %
+
+[MEMORY]
+total               : 188 GB 
+available           : 184 GB 
+using               : 1.096 % 
+
+[DISK]
+name                /dev/nvme0n1p1
+disk                915 GB 
+using_disk          32 GB 
+using_disk_percent  3.523 % 
+
+name                /dev/sda1
+disk                7392 GB 
+using_disk          0 GB 
+using_disk_percent  0.001 % 
+
+total_disk          8308 GB 
+total_usable_disk   7856 GB 
+
+GPU
+GPU 0               : NVIDIA GeForce RTX 3090
+memory              : 24576 MB
+using_memory        : 5 MB
+using_percent       : 0.02 %
+
+GPU 1               : NVIDIA GeForce RTX 3090
+memory              : 24576 MB
+using_memory        : 5 MB
+using_percent       : 0.02 %
+
+GPU 2               : NVIDIA GeForce RTX 3090
+memory              : 24576 MB
+using_memory        : 5 MB
+using_percent       : 0.02 %
+
+GPU 3               : NVIDIA GeForce RTX 3090
+memory              : 24576 MB
+using_memory        : 24 MB
+using_percent       : 0.098 %
+
+number_of_gpu       : 4
+total_memory        : 98304 MB
+total_using_memory  : 39 MB
+total_using_percent : 0.04 %
