@@ -3,6 +3,7 @@ import psutil
 
 class gpu:
 
+    #gpu 고정 정보
     def gpu_fixed():
         # gpu_fixed 딕셔너리들을 담을 리스트
         gpus_fixed = []
@@ -39,16 +40,12 @@ class gpu:
             gpus_fixed.append(gpu_fixed)
             gpu_fixed = {}
 
-            # gpu_info.extend([name, memory, using_memory, using_percent])
-
-
-
-            # gpus_info.append(gpu_info)
         total_gpu["total_gpu_memory_capacity_MB"] = total_gpu_memory_capacity_MB
         gpus_fixed.append(total_gpu)
 
         return gpus_fixed
 
+    #변하는 gpu 정보
     def gpu_change():
         #변하는 gpu 딕셔너리를 담을 리스트
         gpus_change = []
@@ -76,6 +73,8 @@ class gpu:
             gpu_change = {}
         return gpus_change
 
+       
 
+    
 print(gpu.gpu_fixed())
 print(gpu.gpu_change())
