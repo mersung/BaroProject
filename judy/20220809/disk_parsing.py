@@ -6,12 +6,16 @@ class Disk:
     # 고정값 받아오는 함수
     def get_fixed_info(self):
 
+        # NODE_FIXED에 들어가는 정보 사전
+        node_fixed_disk_info: dict = {}
+
+        # DISK_FIXED에 들어가는 정보 리스트
         disk_fixed_list: list[dict] = []
     
         # Disk 총 용량, 사용가능 용량, 사용중 용량
         disk = os.popen("df | grep -e /dev/nvme -e /dev/sd -e /dev/hd").read().strip().split('\n')
 
-        # 모든 Disk의 총 용량
+        # 모든 Disk의 총 용량 -> NODE_FIXED에 들어감
         total_disk_capacity_GB: int = 0
 
         for d in disk:
