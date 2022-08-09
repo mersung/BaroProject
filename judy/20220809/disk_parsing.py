@@ -3,8 +3,6 @@ import os
 # Disk Class
 class Disk:
 
-    
-
     # 고정값 받아오는 함수
     def get_fixed_info(self):
 
@@ -39,8 +37,12 @@ class Disk:
         # 고정된 디스크 값: [{각 디스크 경로, 각 디스크 총량}], 모든 디스크 총량
         return disk_fixed_list, total_disk_capacity_info
 
+    # 변화하는 값 받아오는 함수
     def get_changing_info(self) -> list:
         
+        # NODE_CHANGE에 들어갈 Disk 정보
+        node_change_disk_info: dict = {}
+
         disk_chainging_list:list[dict] = []
 
         # Disk 총 용량, 사용가능 용량, 사용중 용량
@@ -56,11 +58,15 @@ class Disk:
             # 각 GPU의 정보 Dictionary 형태로 넣어줌
             chainging_info.update({"disk_using_GB" : round(int(d[2]) / 1024**2)})
             chainging_info.update({"disk_using_percent" : round(int(d[2])/int(d[1])*100, 3)})
-            chainging_info.update({"free_disk_GB" : round(int(d[3]) / 1024**2)})
+            
+            
+            node_change_disk_info.update({"free_disk_GB" : round(int(d[3]) / 1024**2)})
+            node_change_disk_info.update({"free_disk_percent" : round(int(d[3]) / 1024**2)})
 
             # GPU 리스트에 딕셔너리 넣기
             disk_chainging_list.append(chainging_info)
 
+        # 변화하는 값: [{각 디스크 사용량(GB), 각 디스크 사용량(%)}], 
         return disk_chainging_list, 
 
 if __name__ == "__main__":
