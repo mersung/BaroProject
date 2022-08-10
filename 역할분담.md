@@ -49,3 +49,18 @@
      
     
 #
+
+####
+2022-08-10
+
+    심대성(tony) : GPU 클래스, 모듈화 수정, 테이블 수정, 오류 수정
+    
+    이아연(judy) : Admin DB 클래스 생성 후, __init__, mergeKey()작성, 고정 데이터 저장
+     
+    김용후(felix) : CPU 클래스, 모듈화 수정, 테이블 수정, 오류 수정
+
+    이승준(bumstead) : Node 변화 클래스,모듈화, makeSQL(), insert DB()작성
+
+    이원형(chris) : Node 고정 클래스,모듈화, makeSQL(), insert DB()작성
+
+#

@@ -4,15 +4,33 @@ import os
 
 
 class Disk:
+    def __init__(self) -> None:
+        self.node_fixed_disk_info: dict = {}
+        self.disk_fixed_list: list = []
+        self.node_change_disk_info: dict = {}
+        self.disk_change_list: list = []
+
+        self.fixed_info()
+        self.changing_info()
+
+    # getter method
+    def get_node_fixed_disk_info(self) -> dict:
+        return self.node_fixed_disk_info
+
+    def get_disk_fixed_list(self) -> list:
+        self.changing_info()
+        return self.disk_fixed_list
+
+    def get_node_change_disk_info(self) -> dict:
+        return self.node_change_disk_info
+
+    def get_disk_change_list(self) -> list:
+        self.changing_info()
+        return self.disk_change_list
 
     # 고정값 받아오는 함수
-    def get_fixed_info(self):
 
-        # NODE_FIXED에 들어가는 정보 사전
-        node_fixed_disk_info: dict = {}
-
-        # DISK_FIXED에 들어가는 정보 리스트
-        disk_fixed_list: list[dict] = []
+    def fixed_info(self):
 
         # Disk 총 용량, 사용가능 용량, 사용중 용량
         disk = os.popen(
@@ -37,25 +55,18 @@ class Disk:
                 {"each_total_disk_capacity_GB": round(int(d[1]) / 1024**2)})
 
             # GPU 리스트에 딕셔너리 넣기
-            disk_fixed_list.append(fixed_info)
+            self.disk_fixed_list.append(fixed_info)
 
         # 모든 GPU 총량 딕셔너리에 넣기
-        node_fixed_disk_info.update(
+        self.node_fixed_disk_info.update(
             {"total_disk_capacity_GB": round(total_disk_capacity_GB / 1024**2)})
 
-        # 고정된 디스크 값
-        # DISK_FIXED TABLE: [{각 디스크 경로, 각 디스크 총량}]
-        # NODE_FIXED TABLE: 모든 디스크 총량
-        return disk_fixed_list, node_fixed_disk_info
-
     # 변화하는 값 받아오는 함수
-    def get_changing_info(self) -> list:
+    def changing_info(self) -> list:
 
-        # NODE_CHANGE에 들어갈 Disk 딕셔너리
-        node_change_disk_info: dict = {}
-
-        # DISK_CHANGE에 들어갈 DISK 리스트
-        disk_chainging_list: list[dict] = []
+        # 초기화
+        self.disk_change_list.clear()
+        self.node_change_disk_info.clear()
 
         # 모든 Disk의 총 용량 -> NODE_FIXED에 들어감
         total_disk_capacity_GB: int = 0
@@ -78,28 +89,28 @@ class Disk:
             # 모든 DISK의 사용량 계산
             total_free_disk_GB += int(d[3])
 
-            # 각 DISK의 정보 Dictionary 형태로 넣어줌
             chainging_info.update(
                 {"disk_using_GB": round(int(d[2]) / 1024**2)})
             chainging_info.update(
                 {"disk_using_percent": round(int(d[2])/int(d[1])*100, 3)})
 
             # GPU 리스트에 딕셔너리 넣기
-            disk_chainging_list.append(chainging_info)
+            self.disk_change_list.append(chainging_info)
 
-        node_change_disk_info.update(
+        self.node_change_disk_info.update(
             {"free_disk_GB": round(total_free_disk_GB / 1024**2)})
-        node_change_disk_info.update({"free_disk_percent": round(
+        self.node_change_disk_info.update({"free_disk_percent": round(
             (total_free_disk_GB / total_disk_capacity_GB) * 100, 3)})
-
-        # 변화하는 디스크 값
-        # DISK_CHANGE TABLE: [{각 디스크 사용량(GB), 각 디스크 사용량(%)}]
-        # NODE_CHANGE TABLE: {사용 가능 디스크(GB), 사용 가능 디스크(%)}
-        return disk_chainging_list, node_change_disk_info
 
 
 if __name__ == "__main__":
     disk = Disk()
 
-    print(disk.get_fixed_info())
-    print(disk.get_changing_info())
+    while (True):
+        print(disk.get_disk_change_list())
+        print(disk.get_node_change_disk_info())
+
+    # print(disk.get_disk_fixed_list())
+    # print(disk.get_disk_change_list())
+    # print(disk.get_node_change_disk_info())
+    # print(disk.get_node_fixed_disk_info())

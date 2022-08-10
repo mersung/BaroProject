@@ -1,0 +1,8 @@
+{
+    "python.analysis.extraPaths": [
+        "./chris/20220809",
+        "./felix/20220809",
+        "./judy/20220809",
+        "./tony/20220809"
+    ]
+}

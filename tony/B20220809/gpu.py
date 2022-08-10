@@ -17,12 +17,14 @@ class Gpu:
         return self.node_fixed_gpu_info
 
     def get_node_change_gpu_info(self) -> dict:
+        self.gpu_change()
         return self.node_change_gpu_info
 
     def get_gpu_fixed_list(self) -> list:
         return self.gpu_fixed_list
 
     def get_gpu_change_list(self) -> list:
+        self.gpu_change()
         return self.gpu_change_list
 
     # gpu 고정 정보
@@ -70,13 +72,17 @@ class Gpu:
 
         #total_gpu["total_gpu_memory_capacity_MB"] = total_gpu_memory_capacity_MB
         self.node_fixed_gpu_info.update(
-            {"total_gpu_memory": total_gpu_memory_capacity_MB})
+            {"total_gpu_memory_capacity_MB": total_gpu_memory_capacity_MB})
         # gpus_fixed.append(total_gpu)
 
         # return gpus_fixed
 
     # 변하는 gpu 정보
     def gpu_change(self):
+        # 초기화
+        self.gpu_change_list.clear()
+        self.node_change_gpu_info.clear()
+
         # 변하는 gpu 딕셔너리를 담을 리스트
         #gpus_change = []
         # 각 gpu 딕셔너리, 인덱스, ip, 각 gpu사용량(MB), 각 gpu사용률(%), ip는 나중에 따로

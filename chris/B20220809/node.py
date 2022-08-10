@@ -25,7 +25,7 @@ class Node:
         
         self.node_fixed_info["ip"] =ip
         self.node_fixed_info["host_name"] = host_name
-        self.node_fixed_info["all_mem"] = all_mem
+        self.node_fixed_info["total_memory_capacity_GB"] = all_mem
 
     def changing_refresh(self):
         # memory 실시간
