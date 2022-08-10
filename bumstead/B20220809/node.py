@@ -2,8 +2,8 @@ import os
 import psutil
 
 class Node:
-    def __init__(self)->None:
-        self.
+    # def __init__(self)->None:
+    #     self.
 
     def node_changing(self):
         ## memory

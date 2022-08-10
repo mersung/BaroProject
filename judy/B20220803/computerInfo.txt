@@ -1,0 +1,4 @@
+CPU | Core counts: 20, model name	: Intel(R) Core(TM) i9-10900X CPU @ 3.70GHz
+Memory | Using Memory: 5GB, Total Memory: 188GB
+Disk | Using Disk: 87GB, Total Disk: 983GB
+GPU | Count: 4, Name: NVIDIA GeForce RTX 3090, Using Memory: 264KB
