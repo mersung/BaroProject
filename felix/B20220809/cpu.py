@@ -1,12 +1,11 @@
 import os
-import time
 import psutil
 
 
 class CPU:
 
     # 생성자
-    def __init__(self) -> None:
+    def __init__(self):
         self.fixed_cpu_info = {}
         self.changed_cpu_info = {}
         self.fixed_data()
@@ -23,11 +22,14 @@ class CPU:
     # cpu 고정 정보
     def fixed_data(self):
         # cpu 제품 이름
-        cpu_name: str = os.popen("cat /proc/cpuinfo | grep 'model name' | tail -1").read().split(":")[-1].strip()
+        cpu_name: str = os.popen(
+            "cat /proc/cpuinfo | grep 'model name' | tail -1").read().split(":")[-1].strip()
         # cpu 코어 수
-        cpu_core: int = int(os.popen("cat /proc/cpuinfo | grep 'cpu cores' | tail -1").read().split(":")[-1].strip())
+        cpu_core: int = int(os.popen(
+            "cat /proc/cpuinfo | grep 'cpu cores' | tail -1").read().split(":")[-1].strip())
         # cpu 스레드 수
-        cpu_thread: int = int(os.popen("cat /proc/cpuinfo | grep 'siblings' | tail -1").read().split(":")[-1].strip())
+        cpu_thread: int = int(os.popen(
+            "cat /proc/cpuinfo | grep 'siblings' | tail -1").read().split(":")[-1].strip())
 
         self.fixed_cpu_info["cpu_name"] = cpu_name
         self.fixed_cpu_info["number_of_core"] = cpu_core
@@ -47,10 +49,5 @@ class CPU:
 
 if __name__ == "__main__":
     cpu = CPU()
-    n = 10
-    while n:
-        print(cpu.get_fixed_cpu_info())
-        print(cpu.get_changed_cpu_info())
-        n-=1
-        time.sleep(1)
-
+    print(cpu.get_fixed_cpu_info())
+    print(cpu.get_changed_cpu_info())

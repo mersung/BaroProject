@@ -1,9 +1,10 @@
 import os
 import psutil
+import paramiko
 
 
 class Gpu:
-    def __init__(self) -> None:
+    def __init__(self,ssh) -> None:
         # 총량이기 때문에 dict로 한 번씩 빼줌
         self.node_fixed_gpu_info: dict = {}
         self.node_change_gpu_info: dict = {}
@@ -13,6 +14,7 @@ class Gpu:
 
         self.gpu_fixed()
         self.gpu_change()
+        self.ssh = ssh
 
     # getter
     def get_node_fixed_gpu_info(self) -> dict:
@@ -42,42 +44,45 @@ class Gpu:
         # info = "GPU\n"
 
         # gpu 개수(index 뽑기 용)
-        number_of_gpu = int(os.popen(
-            "nvidia-smi -q -d memory | grep 'Attached GPUs'").read().split(':')[1])
-        # 노드고정에 들어갈 gpu개수 
+        # number_of_gpu = int(os.popen(
+        #     "nvidia-smi -q -d memory | grep 'Attached GPUs'").read().split(':')[1])
+        stdin, stdout, stderr = ssh.exec_command(
+            "nvidia-smi -q -d memory | grep 'Attached GPUs'")
+        number_of_gpu = stdout.readlines().split()
+        print(number_of_gpu)
+        # 노드고정에 들어갈 gpu개수
         self.node_fixed_gpu_info["number_of_gpu"] = number_of_gpu
         # 각 gpu 메모리 총량
         gpu_memories = os.popen(
             "nvidia-smi -q -d memory | grep 'Total'").read().strip().split('\n')
-        print(gpu_memories)
         # gpu 모델명
         gpu_models = os.popen("nvidia-smi -L").read().split('\n')
 
         # 노드 고정에 들어갈 총 메모리(MB)
         total_gpu_memory_capacity_MB = 0
 
-        # gpu 고정에 들어갈 것들
-        for i in range(number_of_gpu):
-            gpu_model = gpu_models[i]
+        # # gpu 고정에 들어갈 것들
+        # for i in range(number_of_gpu):
+        #     gpu_model = gpu_models[i]
 
-            gpu_info = []
+        #     gpu_info = []
 
-            name: str = ' '.join(gpu_model.split()[2:-2])
-            memory: int = int(gpu_memories[i*2].split(':')[-1].split()[0])
+        #     name: str = ' '.join(gpu_model.split()[2:-2])
+        #     memory: int = int(gpu_memories[i*2].split(':')[-1].split()[0])
 
-            total_gpu_memory_capacity_MB += memory
+        #     total_gpu_memory_capacity_MB += memory
 
-            gpu_fixed["gpu_index"] = i
-            gpu_fixed["gpu_name"] = name
-            gpu_fixed["each_total_gpu_memory_capacity_MB"] = memory
+        #     gpu_fixed["gpu_index"] = i
+        #     gpu_fixed["gpu_name"] = name
+        #     gpu_fixed["each_total_gpu_memory_capacity_MB"] = memory
 
-            # gpus_fixed.append(gpu_fixed)
-            self.gpu_fixed_list.append(gpu_fixed)
+        #     # gpus_fixed.append(gpu_fixed)
+        #     self.gpu_fixed_list.append(gpu_fixed)
 
-            gpu_fixed = {}
+        #     gpu_fixed = {}
 
         #total_gpu["total_gpu_memory_capacity_MB"] = total_gpu_memory_capacity_MB
-        #노드 고정에 들어갈 총 gpu 용량 
+        # 노드 고정에 들어갈 총 gpu 용량
         self.node_fixed_gpu_info.update(
             {"total_gpu_memory_capacity_MB": total_gpu_memory_capacity_MB})
         # gpus_fixed.append(total_gpu)
@@ -101,7 +106,7 @@ class Gpu:
         # gpu 개수(index 뽑기 용)
         number_of_gpu = int(os.popen(
             "nvidia-smi -q -d memory | grep 'Attached GPUs'").read().split(':')[1])
-
+ 
         # 각 gpu 메모리 총량
         gpu_memories = os.popen(
             "nvidia-smi -q -d memory | grep 'Total'").read().strip().split('\n')
@@ -119,7 +124,7 @@ class Gpu:
                                          0])/int(gpu_memories[i*2].split(':')[-1].split()[0])*100, 3)
             total_gpu_memory_using_percent += using_percent
 
-            #GPU변함에 들어갈 데이터
+            # GPU변함에 들어갈 데이터
             gpu_change["gpu_index"] = i
             gpu_change["gpu_memory_using_MB"] = using_memory
             gpu_change["gpu_memory_using_percent"] = using_percent
@@ -127,14 +132,20 @@ class Gpu:
             # gpus_change.append(gpu_change)
             self.gpu_change_list.append(gpu_change)
             gpu_change = {}
-        #노드_변함에 들어갈 총 사용량들
+        # 노드_변함에 들어갈 총 사용량들
         self.node_change_gpu_info["total_gpu_memory_using_percent"] = total_gpu_memory_using_percent
         self.node_change_gpu_info["total_gpu_memory_using_MB"] = total_gpu_memory_using_MB
         # return gpus_change
 
-print(Gpu().get_gpu_fixed_list())
-print(Gpu().get_gpu_change_list())
-print(Gpu().get_node_fixed_gpu_info())
-print(Gpu().get_node_change_gpu_info())
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+            username="oem", password='baro')  # customer
+Gpu = Gpu(ssh)
+print(Gpu.gpu_fixed())
+# print(Gpu().get_gpu_fixed_list())
+# print(Gpu().get_gpu_change_list())
+# print(Gpu().get_node_fixed_gpu_info())
+# print(Gpu().get_node_change_gpu_info())
 # print(Gpu.gpu_fixed())
 # print(Gpu.gpu_change())

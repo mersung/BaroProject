@@ -1,19 +1,22 @@
-from turtle import update
 from chris.B20220809.node import Node
-from felix.B20220809.cpu import CPU
-from judy.B20220810.disk_parsing import Disk
+from felix.B20220811.cpu import CPU
+from judy.B20220811.disk_parsing import Disk
 from tony.B20220809.gpu import Gpu
 import time
 import pymysql
+import paramiko
 
 
 class AdminDB:
 
-    def __init__(self, conn, cur):
+    def __init__(self, conn, cur, ssh):
+        # 원격 접속을 위한 ssh
+        self.ssh = ssh
+
         self.node = Node()
         self.cpu = CPU()
         self.gpu = Gpu()
-        self.disk = Disk()
+        self.disk = Disk(self.ssh)
 
         self.conn = conn
         self.cur = cur
@@ -34,64 +37,60 @@ class AdminDB:
         self.disk_fixed_table: list = []
         self.disk_changed_table: list = []
 
-        self.mergeKey()
-
-    def mergeKey(self):
-        # 예외 처리 일단 제외
-
         # FK로 쓰이는 값들
-        cpu_name: dict = {'cpu_name': None}
-        ip: dict = {'ip': None}
-        gpu_index: list = []
-        disk_path: list = []
+        self.cpu_name: dict = {'cpu_name': None}
+        self.ip: dict = {'ip': None}
+        self.gpu_index: list = []
+        self.disk_path: list = []
 
-        # cpu
-        self.cpu_table = self.cpu.get_fixed_cpu_info()
+        self.mergeFixedKey()
+        self.mergeChangeKey()
 
-        cpu_name['cpu_name'] = self.cpu_table.get('cpu_name')
-
+    def mergeFixedKey(self):
         # node_fixed
         self.node_fixed_table.update(self.node.get_node_fixed_info())
+        self.node_fixed_table.update(self.cpu.get_fixed_cpu_info())
         self.node_fixed_table.update(self.disk.get_node_fixed_disk_info())
         self.node_fixed_table.update(self.gpu.get_node_fixed_gpu_info())
-        self.node_fixed_table.update(cpu_name)
 
-        ip['ip'] = self.node_fixed_table.get('ip')
+        self.ip['ip'] = self.node_fixed_table.get('ip')
+
+        # disk_fixed
+        self.disk_fixed_table = self.disk.get_disk_fixed_list()
+        for l in self.disk_fixed_table:
+            l.update(self.ip)
+            self.disk_path.append(l['disk_path'])  # disk_change에서 쓰는 FK 추출
+
+        # gpu_fixed
+        self.gpu_fixed_table = self.gpu.get_gpu_fixed_list()
+        for l in self.gpu_fixed_table:
+            l.update(self.ip)
+            # gpu_change에서 쓰는 FK 추출 > 인덱스 맞추는거라 살짝 불안
+            self.gpu_index.append(l['gpu_index'])
+
+    def mergeChangeKey(self):
 
         # node_changed
         self.node_change_table.update(self.node.get_node_changing_info())
         self.node_change_table.update(self.cpu.get_changed_cpu_info())
         self.node_change_table.update(self.disk.get_node_change_disk_info())
         self.node_change_table.update(self.gpu.get_node_change_gpu_info())
-        self.node_change_table.update(ip)
-
-        # disk_fixed
-        self.disk_fixed_table = self.disk.get_disk_fixed_list()
-        for l in self.disk_fixed_table:
-            l.update(ip)
-            disk_path.append(l['disk_path'])  # disk_change에서 쓰는 FK 추출
+        self.node_change_table.update(self.ip)
 
         # disk_change
         self.disk_changed_table = self.disk.get_disk_change_list()
         for i in range(0, len(self.disk_changed_table)):
-            self.disk_changed_table[i].update(ip)
-            self.disk_changed_table[i].update({'disk_path': disk_path[i]})
-
-        # gpu_fixed
-        self.gpu_fixed_table = self.gpu.get_gpu_fixed_list()
-        for l in self.gpu_fixed_table:
-            l.update(ip)
-            # gpu_change에서 쓰는 FK 추출 > 인덱스 맞추는거라 살짝 불안
-            gpu_index.append(l['gpu_index'])
+            self.disk_changed_table[i].update(self.ip)
+            self.disk_changed_table[i].update({'disk_path': self.disk_path[i]})
 
         # gpu_change
         self.gpu_changed_table = self.gpu.get_gpu_change_list()
         for i in range(0, len(self.gpu_changed_table)):
-            self.gpu_changed_table[i].update(ip)
-            self.gpu_changed_table[i].update({'gpu_index': gpu_index[i]})
+            self.gpu_changed_table[i].update(self.ip)
+            self.gpu_changed_table[i].update({'gpu_index': self.gpu_index[i]})
 
     def changed_insert_db(self):
-        self.mergeKey()
+        self.mergeChangeKey()
 
         print("+++++++++++++++++++++++ Changed 값 ++++++++++++++++++++++")
 
@@ -109,9 +108,6 @@ class AdminDB:
     def fixed_insert_db(self):
 
         print("+++++++++++++++++++++++ fixed 값 ++++++++++++++++++++++")
-
-        # CPU
-        self.insertDB("CPU", self.cpu_table)
 
         # Node
         self.insertDB("NODE_FIXED", self.node_fixed_table)
@@ -132,27 +128,24 @@ class AdminDB:
         # items만큼 돌리기
         for item in data.items():
 
-            # key(column) 하나씩 ''로 묶어주기
-            #k: str = "'" + str(item[0]) + "',"
             k: str = str(item[0]) + ","
             columns_str += k
 
-            # value(data) 하나씩 ''로 묶어주기
+            # value(data) 스트링의 경우 하나씩 ''로 묶어주기
             if (type(item[1]) == str):
                 v: str = "'" + str(item[1]) + "',"
                 values_str += v
             else:
-                v: str = item[1]
-                values_str += str(item[1]) + ","
+                v: str = str(item[1])
+                values_str += str(v) + ","
 
         # 마지막 ,제거 후 괄호 닫기
         columns_str = columns_str[:-1]
         values_str = values_str[:-1]
-        # sql = "INSERT INTO " + table + columns_str + ") VALUES " + values_str + ")"
         sql = "INSERT INTO " + table + columns_str + ") VALUES " + values_str + ")"
 
         # DB Insert execute
-        #print(sql)
+        # print(sql)
         self.cur.execute(sql)
         self.conn.commit()
 
@@ -172,23 +165,31 @@ class AdminDB:
 
 if __name__ == "__main__":
 
-    # print("first: ", cpu.get_changed_cpu_info())
-    # print("second: ", cpu.get_changed_cpu_info())
-
     conn = pymysql.connect(host='localhost', user='root',
                                 password='baro', db='HWMonitoring', charset='utf8')
     cur = conn.cursor()
 
-    admindb = AdminDB(conn, cur)
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect("192.168.20.115", port='22', #고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+                username="oem", password='baro')  # customer
+
+    admindb = AdminDB(conn, cur, ssh)
+
+    # stdin, stdout, stderr = ssh.exec_command('df -h')
+    # print(''.join(stdout.readlines()))
 
     try:
         admindb.fixed_insert_db()
-        try:
-            while True:
-                admindb.changed_insert_db()
-                time.sleep(1)
-        except KeyboardInterrupt:
-            conn.close()
+        while True:
+            admindb.changed_insert_db()
+            time.sleep(2)
+
+    except KeyboardInterrupt:
+        conn.close()
 
     except:
+        conn.close()
         print("Wrong")
+
+    ssh.close()

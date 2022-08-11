@@ -1,10 +1,13 @@
 import os
+import paramiko
 
 # Disk Class
 
 
 class Disk:
-    def __init__(self) -> None:
+    def __init__(self, ssh) -> None:
+
+        self.ssh = ssh
 
         self.node_fixed_disk_info: dict = {}
         self.disk_fixed_list: list = []
@@ -32,10 +35,14 @@ class Disk:
     # 고정값 받아오는 함수
 
     def fixed_info(self):
+        # 원격에서 실행
+        stdin, stdout, stderr = self.ssh.exec_command(
+            "df | grep -e /dev/nvme -e /dev/sd -e /dev/hd")
+        disk: list = "".join(stdout.readlines()).strip().split('\n')
 
         # Disk 총 용량, 사용가능 용량, 사용중 용량
-        disk = os.popen(
-            "df | grep -e /dev/nvme -e /dev/sd -e /dev/hd").read().strip().split('\n')
+        # disk = os.popen(
+        #     "df | grep -e /dev/nvme -e /dev/sd -e /dev/hd").read().strip().split('\n')
 
         # 모든 Disk의 총 용량 -> NODE_FIXED에 들어감
         total_disk_capacity_GB: int = 0
@@ -74,9 +81,14 @@ class Disk:
         # 모든 Disk의 총 프리 -> NODE_FIXED에 들어감
         total_free_disk_GB: int = 0
 
+        # 원격에서 실행
+        stdin, stdout, stderr = self.ssh.exec_command(
+            "df | grep -e /dev/nvme -e /dev/sd -e /dev/hd")
+        disk: list = "".join(stdout.readlines()).strip().split('\n')
+
         # Disk 총 용량, 사용가능 용량, 사용중 용량
-        disk = os.popen(
-            "df | grep -e /dev/nvme -e /dev/sd -e /dev/hd").read().strip().split('\n')
+        # disk = os.popen(
+        #     "df | grep -e /dev/nvme -e /dev/sd -e /dev/hd").read().strip().split('\n')
 
         for d in disk:
 
@@ -105,13 +117,17 @@ class Disk:
 
 
 if __name__ == "__main__":
-    disk = Disk()
 
-    while (True):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect("192.168.20.115", port='22',
+                username="oem", password='baro')  # customer
+
+    disk = Disk(ssh)
+
+    print(disk.get_disk_fixed_list())
+    print(disk.get_node_fixed_disk_info())
+
+    while(True):
         print(disk.get_disk_change_list())
         print(disk.get_node_change_disk_info())
-
-    # print(disk.get_disk_fixed_list())
-    # print(disk.get_disk_change_list())
-    # print(disk.get_node_change_disk_info())
-    # print(disk.get_node_fixed_disk_info())

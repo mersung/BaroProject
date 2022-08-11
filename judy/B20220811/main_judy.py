@@ -1,22 +1,18 @@
-from chris.B20220811.node import Node
+from chris.B20220809.node import Node
 from felix.B20220811.cpu import CPU
-from judy.B20220811.disk_parsing import Disk
-from tony.B20220811.gpu import Gpu
+from judy.B20220810.disk_parsing import Disk
+from tony.B20220809.gpu import Gpu
 import time
 import pymysql
-import paramiko
 
 
 class AdminDB:
 
-    def __init__(self, conn, cur, ssh):
-        # 원격 접속을 위한 ssh
-        self.ssh = ssh
-
-        self.node = Node(self.ssh)
+    def __init__(self, conn, cur):
+        self.node = Node()
         self.cpu = CPU()
-        self.gpu = Gpu(self.ssh)
-        self.disk = Disk(self.ssh)
+        self.gpu = Gpu()
+        self.disk = Disk()
 
         self.conn = conn
         self.cur = cur
@@ -47,6 +43,11 @@ class AdminDB:
         self.mergeChangeKey()
 
     def mergeFixedKey(self):
+        # cpu
+        # self.cpu_table = self.cpu.get_fixed_cpu_info()
+
+        # self.cpu_name['cpu_name'] = self.cpu_table.get('cpu_name')
+
         # node_fixed
         self.node_fixed_table.update(self.node.get_node_fixed_info())
         self.node_fixed_table.update(self.cpu.get_fixed_cpu_info())
@@ -109,6 +110,9 @@ class AdminDB:
 
         print("+++++++++++++++++++++++ fixed 값 ++++++++++++++++++++++")
 
+        # CPU
+        #self.insertDB("CPU", self.cpu_table)
+
         # Node
         self.insertDB("NODE_FIXED", self.node_fixed_table)
 
@@ -145,9 +149,9 @@ class AdminDB:
         sql = "INSERT INTO " + table + columns_str + ") VALUES " + values_str + ")"
 
         # DB Insert execute
-        print(sql)
-        # self.cur.execute(sql)
-        # self.conn.commit()
+        # print(sql)
+        self.cur.execute(sql)
+        self.conn.commit()
 
     def insertDB(self, table: str, data):
 
@@ -169,15 +173,7 @@ if __name__ == "__main__":
                                 password='baro', db='HWMonitoring', charset='utf8')
     cur = conn.cursor()
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
-                username="oem", password='baro')  # customer
-
-    admindb = AdminDB(conn, cur, ssh)
-
-    # stdin, stdout, stderr = ssh.exec_command('df -h')
-    # print(''.join(stdout.readlines()))
+    admindb = AdminDB(conn, cur)
 
     try:
         admindb.fixed_insert_db()
@@ -191,5 +187,3 @@ if __name__ == "__main__":
     except:
         conn.close()
         print("Wrong")
-
-    ssh.close()

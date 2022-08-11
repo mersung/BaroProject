@@ -3,7 +3,7 @@ import psutil
 
 
 # cpu 제품 이름
-def get_cpu_info() -> str:
+def get_cpu_info():
     info = "[CPU]\n"
 
     # cpu 정보 [제품이름, 코어수, 스레드수, 사용률]
@@ -27,7 +27,7 @@ def get_cpu_info() -> str:
     return info, cpu_info
 
 
-def get_memory_info() -> str:
+def get_memory_info():
     info = "[MEMORY]\n"
 
     # 메모리 총 용량, 사용가능 용량, 사용중 용량
@@ -45,7 +45,7 @@ def get_memory_info() -> str:
     return info, memory_info
 
 
-def get_disk_info() -> str:
+def get_disk_info():
     info = "[DISK]\n"
 
     # Disk 총 용량, 사용가능 용량, 사용중 용량
@@ -61,30 +61,30 @@ def get_disk_info() -> str:
 
     for d in disk:
         d = d.split()
-        print(d)
+        # print(d)
         disk_total += int(d[1])
         disk_usable_total += int(d[3])
 
         disk_info = []
 
-        info += "{:<20}".format("name") + d[0] + "\n"
-        info += "{:<20}".format("disk") + str(int(int(d[1])/1024**2)) + " GB \n"
-        info += "{:<20}".format("using_disk") + str(int(int(d[2])/1024**2)) + " GB \n"
-        info += "{:<20}".format("using_disk_percent") + str(round(int(d[2])/int(d[1])*100, 3)) + " % \n\n"
+        info += "{:<20}: ".format("name") + d[0] + "\n"
+        info += "{:<20}: ".format("disk") + str(int(int(d[1])/1024**2)) + " GB \n"
+        info += "{:<20}: ".format("using_disk") + str(int(int(d[2])/1024**2)) + " GB \n"
+        info += "{:<20}: ".format("using_disk_percent") + str(round(int(d[2])/int(d[1])*100, 3)) + " % \n\n"
 
         disk_info.extend([d[0], int(int(d[1])/1024**2), int(int(d[2])/1024**2), round(int(d[2])/int(d[1])*100, 3)])
 
         disks_info.append(disk_info)
 
-    info += "{:<20}".format("total_disk") + str(int(disk_total/1024**2)) + " GB \n"
-    info += "{:<20}".format("total_usable_disk") + str(int(disk_usable_total/1024**2)) + " GB \n\n"
+    info += "{:<20}: ".format("total_disk") + str(int(disk_total/1024**2)) + " GB \n"
+    info += "{:<20}: ".format("total_usable_disk") + str(int(disk_usable_total/1024**2)) + " GB \n\n"
 
     disk_total_info.extend([int(disk_total/1024**2), int(disk_usable_total/1024**2)])
 
     return info, disks_info, disk_total_info
 
 
-def get_gpu_info() -> str:
+def get_gpu_info():
     info = "GPU\n"
 
     number_of_gpu = int(os.popen("nvidia-smi -q -d memory | grep 'Attached GPUs'").read().split(':')[1])
@@ -138,20 +138,17 @@ if __name__ == "__main__":
     info1, cpu_info = get_cpu_info()
     # 메모리 정보 [총용량, 사용가능 용량, 사용량]
     info2, memory_info = get_memory_info()
-    # 각 disk 정보 [[디스크이름, 사용량(GB), 사용량(%)]]
+    # 각 disk 정보 [[디스크이름, 디스크용량, 사용량(GB), 사용량(%)]]
     # 총 disk 정보 [총 디스크 용량, 사용가능 디스크 용량]
     info3, disks_info, disk_total_info = get_disk_info()
     # 각 gpu들 정보 [[이름, 메모리, 사용중인메모리, 사용률]]
     # 총 gpu 정보 [개수, 메모리, 사용중인메모리, 사용률]
     info4, gpus_info, gpu_total_info = get_gpu_info()
 
-    print(info1)
-    print(info2)
-    print(info3)
-    print(info4)
+    # print(info)
 
     # 파일 저장
-    with open('/home/oem/felix/20220803/device_info.txt', 'w') as f:
+    with open('/home/oem/baroSW/felix/B20220810/device_info.txt', 'w') as f:
         f.write(info1)
         f.write(info2)
         f.write(info3)
