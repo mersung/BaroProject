@@ -109,3 +109,17 @@
 ## models.py 일부(테이블 생성)
 
 ![image](https://user-images.githubusercontent.com/86938974/184829408-c9af4e9d-b203-47a0-8ff0-9b875e973d67.png)
+
+## 뷰와 url 연결 (urls.py 세팅)
+
+![image](https://user-images.githubusercontent.com/86938974/184829688-fb55e631-f626-4748-b053-666f311f9474.png)
+
+## html에 데이터 전달(views.py)
+
+![image](https://user-images.githubusercontent.com/86938974/184830034-22c65fc2-dd91-48da-bf80-4a7fc961cfb2.png)
+
+## 뷰로 출력(일부)
+
+![image](https://user-images.githubusercontent.com/86938974/184830137-b161ace0-beb5-48ab-afa1-98410128a1ed.png)
+
+
