@@ -64,3 +64,44 @@
     이원형(chris) : Node 고정 클래스,모듈화, makeSQL(), insert DB()작성
 
 #
+
+####
+2022-08-11 
+
+    심대성(tony) : ssh 연결을 위한 data parsing 재작업
+    
+    이아연(judy) : ssh 연결을 위한 data parsing 재작업
+     
+    김용후(felix) : ssh 연결을 위한 data parsing 재작업
+
+    이승준(bumstead) : ssh 연결을 위한 data parsing 재작업
+
+    이원형(chris) : ssh 연결을 위한 data parsing 재작업
+
+#
+
+####
+2022-08-12
+
+    심대성(tony) : Django 연결 및 models.py 작성
+    
+    이아연(judy) : Django 연결 및 models.py 작성
+     
+    김용후(felix) : Django 연결 및 models.py 작성
+
+    이승준(bumstead) : Django 연결 및 models.py 작성
+
+    이원형(chris) : Django 연결 및 models.py 작성
+
+#
+
+####
+2022-08-16
+
+    심대성(tony) : Django MVC 연결 및 view 초안 출력 
+
+    이승준(bumstead) : Django MVC 연결 및 view 초안 출력 
+
+    이원형(chris) : Django MVC 연결 및 view 초안 출력 
+    
+#
