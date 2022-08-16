@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table{
+            width : 100%;
+            border: 1px solid #444444;
+        }
+        tr,td {
+            border: 1px solid #444444;
+        }
+        h1{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <h1>NodeFixed 정보</h1>
+    
+        <table>
+            <tr align="center">
+                <td>IP주소</td>
+                <td>호스트명</td>
+                <td>총 GPU메모리 총량(MB)</td>
+                <td>GPU 개수</td>
+                <td>총 DISK 용량(GB)</td>
+                <td>총 메모리 용량(GB)</td>
+                <td>CPU 모델명</td>
+                <td>CPU 코어 수</td>
+                <td>CPU 쓰레드 수</td>
+            </tr>
+            {% for node in nodeFixed %}
+            <tr align="center">
+                <td>{{node.ip}}</td>
+                <td>{{node.host_name}}</td>
+                <td>{{node.total_gpu_memory_capacity_mb}}</td>
+                <td>{{node.number_of_gpu}}</td>
+                <td>{{node.total_disk_capacity_gb}}</td>
+                <td>{{node.total_memory_capacity_gb}}</td>
+                <td>{{node.cpu_name}}</td>
+                <td>{{node.number_of_core}}</td>
+                <td>{{node.number_of_thread}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+
+    </div>
+    <div>
+        <h1>NodeChange 정보</h1>
+        
+        <table>
+            <tr align="center">
+                <td>시간</td>
+                <td>IP주소</td>
+                <td>총 GPU메모리 사용량(%)</td>
+                <td>총 GPU메모리 사용량(MB)</td>
+                <td>사용가능 DISK(GB)</td>
+                <td>사용가능 메모리(GB)</td>
+                <td>사용가능 DISK(%)</td>
+                <td>메모리 사용량(%)</td>
+                <td>총 CPU 사용량(%)</td>
+                <td>사용가능한 CPU사용량(%)</td>
+            </tr>
+
+            {% for node in nodeChange %}
+            <tr align="center">
+                <td>{{node.created_at}}</td>
+                <td>{{node.ip}}</td>
+                <td>{{node.total_gpu_memory_using_percent}}</td>
+                <td>{{node.total_gpu_memory_using_mb}}</td>
+                <td>{{node.free_disk_gb}}</td>
+                <td>{{node.free_memory_gb}}</td>
+                <td>{{node.free_disk_percent}}</td>
+                <td>{{node.total_memory_using_percent}}</td>
+                <td>{{node.total_cpu_using_percent}}</td>
+                <td>{{node.free_cpu_percent}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+
+    </div>
+
+    <div>
+        <h1>DiskFixed 정보</h1>
+
+        <table>
+            <tr align="center">
+                <td>디스크이름</td>
+                <td>IP 주소</td>
+                <td>각 디스크 총 메모리(GB)</td>
+            </tr>
+            {% for disk in diskFixed %}
+            <tr align="center">
+                <td>{{disk.disk_path}}</td>
+                <td>{{disk.ip}}</td>
+                <td>{{disk.each_total_disk_capacity_gb}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+
+    </div>
+
+    <div>
+        <h1>DiskChange 정보</h1>
+
+        <table>
+            <tr align="center">
+                <td>시간</td>
+                <td>디스크이름</td>
+                <td style="width: 200px;">IP주소</td>
+                <td>각 디스크 사용량(GB)</td>
+                <td>각 디스크 사용량(%)</td>
+            </tr>
+            {% for disk in diskChange %}
+            <tr align="center">
+                <td>{{disk.create_at}}</td>
+                <td>{{disk.disk_path}}</td>
+                <td>{{disk.ip}}</td>
+                <td>{{disk.disk_using_gb}}</td>
+                <td>{{disk.disk_using_percent}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+    </div>
+
+    <div>
+        <h1>GpuFixed 정보</h1>
+
+        <table>
+            <tr align="center">
+                <td>인덱스</td>
+                <td>IP주소</td>
+                <td>각 GPU 메모리 총량</td>
+                <td>GPU 이름</td>
+            </tr>
+            {% for gpu in gpuFixed %}
+            <tr align="center">
+                <td>{{gpu.gpu_index}}</td>
+                <td>{{gpu.ip}}</td>
+                <td>{{gpu.each_total_gpu_memory_capacity_mb}}</td>
+                <td>{{gpu.gpu_name}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+    </div>
+
+    <div>
+        <h1>GpuChange 정보</h1>
+
+        <table>
+            <tr align="center">
+                <td>시간</td>
+                <td>인덱스</td>
+                <td>IP주소</td>
+                <td>각 GPU 메모리 사용량(MB)</td>
+                <td>각 GPU 메모리 사용률(%)</td>
+            </tr>
+            {% for gpu in gpuChange %}
+            <tr align="center">
+                <td>{{gpu.created_at}}</td>
+                <td>{{gpu.gpu_index}}</td>
+                <td>{{gpu.ip}}</td>
+                <td>{{gpu.gpu_memory_using_mb}}</td>
+                <td>{{gpu.gpu_memory_using_percent}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+    </div>
+
+
+</body>
+</html>
