@@ -105,3 +105,7 @@
     이원형(chris) : Django MVC 연결 및 view 초안 출력 
     
 #
+
+## models.py 일부(테이블 생성)
+
+![image](https://user-images.githubusercontent.com/86938974/184829408-c9af4e9d-b203-47a0-8ff0-9b875e973d67.png)
