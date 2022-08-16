@@ -19,7 +19,7 @@
 
 ## ERD 구상
 ***
-![바로AI 프로젝트 ERD ](https://user-images.githubusercontent.com/86938974/183346335-13bb400a-b4c6-4896-916a-d7f3f1907a13.png)
+![image](https://user-images.githubusercontent.com/86938974/184828840-4e809d19-8a34-430c-8523-9ccdb122667d.png)
 ####
 
 ## 형상 관리
