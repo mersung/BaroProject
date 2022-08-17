@@ -1,6 +1,6 @@
 from chris.B20220811.node import Node
-from felix.B20220811.cpu import CPU
-from judy.B20220811.disk_parsing import Disk
+from felix.B20220812.parser.cpu import CPU
+from judy.B20220812.disk_parsing import Disk
 from tony.B20220811.gpu import Gpu
 import time
 import pymysql
@@ -14,7 +14,7 @@ class AdminDB:
         self.ssh = ssh
 
         self.node = Node(self.ssh)
-        self.cpu = CPU()
+        self.cpu = CPU(self.ssh)
         self.gpu = Gpu(self.ssh)
         self.disk = Disk(self.ssh)
 

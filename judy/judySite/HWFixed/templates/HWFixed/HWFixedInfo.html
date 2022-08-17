@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HWFixed</title>
+</head>
+
+<body>
+    <div>
+        <h4 style="text-align: center;"><B>Node</B></h4>
+        <table border="1px" style="text-align: center;">
+            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+                <tr>
+                    <td>IP</td>
+                    <td>Hostname</td>
+                    <td>총 GPU 메모리 양(MB)</td>
+                    <td>GPU 개수</td>
+                    <td>총 Disk 용량(GB)</td>
+                    <td>총 메모리 용량(GB)</td>
+                    <td>CPU 모델명</td>
+                    <td>CPU core 수</td>
+                    <td>CPU thread 수</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                {% for result in node_result %}
+                <tr>
+                    <td>{{result.ip.ip}}</td>
+                    <td>{{result.host_name}}</td>
+                    <td>{{result.total_gpu_memory_capacity_mb}} MB</td>
+                    <td>{{result.number_of_gpu}}</td>
+                    <td>{{result.total_disk_capacity_gb}} GB</td>
+                    <td>{{result.total_memory_capacity_gb}} GB</td>
+                    <td>{{result.cpu_name}}</td>
+                    <td>{{result.number_of_core}}</td>
+                    <td>{{result.number_of_thread}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4 style="text-align: center;"><B>Disk</B></h4>
+        <table border="1px">
+            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+                <tr>
+                    <td>IP</td>
+                    <td>디스크 경로</td>
+                    <td>각 디스크 메모리 총량(GB)</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                {% for result in disk_result %}
+                <tr>
+                    <td>{{result.ip.ip}}</td>
+                    <td>{{result.disk_path}}</td>
+                    <td>{{result.each_total_disk_capacity_gb}} GB</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div>
+        <h4 style="text-align: center;"><B>GPU</B></h4>
+        <table border="1px">
+            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+                <tr>
+                    <td>IP</td>
+                    <td>인덱스</td>
+                    <td>GPU 이름</td>
+                    <td>각 GPU 메모리 총량(MB)</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                {% for result in gpu_result %}
+                <tr>
+                    <td>{{result.ip.ip}}</td>
+                    <td>{{result.gpu_index}}</td>
+                    <td>{{result.gpu_name}} MB</td>
+                    <td>{{result.each_total_gpu_memory_capacity_mb}} MB</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>

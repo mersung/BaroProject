@@ -1,7 +1,7 @@
-from node import Node
-from cpu import CPU
-from disk import Disk
-from gpu import Gpu
+from .node import Node
+from .cpu import CPU
+from .disk import Disk
+from .gpu import Gpu
 import time
 import pymysql
 import paramiko
@@ -178,7 +178,10 @@ if __name__ == "__main__":
     
 
     try:
-        admindb.fixed_insert_db()
+        try:
+            admindb.fixed_insert_db()
+        except:
+            print("고정 정보는 한 번만 입력")
         while True:
             admindb.changed_insert_db()
             time.sleep(2)

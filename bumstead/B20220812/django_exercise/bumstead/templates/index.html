@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <tr>
+        <td><B>퇴근시켜줘퇴근시켜줘퇴근시켜줘퇴근시켜줘</B></td>
+        <td><B>코로나를 이겨내는 BUMSTEAD</B></td>
+    </tr>
+    <div>
+        <h1>NODE_FIXED</h1>
+        <table>
+            <tr>
+                <td>IP주소</td>
+                <td>호스트명</td>
+                <td>총 GPU메모리 총량(MB)</td>
+                <td>GPU 개수</td>
+                <td>총 DISK 용량(GB)</td>
+                <td>총 메모리 용량(GB)</td>
+                <td>CPU 모델명</td>
+                <td>CPU 코어 수</td>
+                <td>CPU 쓰레드 수</td>
+            </tr>
+            <tr>
+                {% for node in nodeFixed %}
+                <tr>
+                <td>{{node.ip}}</td>
+                <td>{{node.host_name}}</td>
+                <td>{{node.total_gpu_memory_capacity_mb}}</td>
+                <td>{{node.number_of_gpu}}</td>
+                <td>{{node.total_disk_capacity_gb}}</td>
+                <td>{{node.total_memory_capacity_gb}}</td>
+                <td>{{node.cpu_name}}</td>
+                <td>{{node.number_of_core}}</td>
+                <td>{{node.number_of_thread}}</td>
+                
+            </tr>
+                {%endfor%}
+        </table>
+    </div>
+    <div>
+        <h1>NODE_CHANGE</h1>
+        <table>
+            <tr>
+                <td>시간</td>
+                <td>IP주소</td>
+                <td>총 GPU메모리 사용량(%)</td>
+                <td>총 GPU메모리 사용량(MB)</td>
+                <td>사용가능 DISK(GB)</td>
+                <td>사용가능 메모리(GB)</td>
+                <td>사용가능 DISK(%)</td>
+                <td>메모리 사용량(%)</td>
+                <td>총 CPU 사용량(%)</td>
+                <td>사용가능한 CPU사용량(%)</td>
+            </tr>
+            {% for node in nodeChange %}
+            <tr>
+                <td>{{node.created_at}}</td>
+                <td>{{node.ip}}</td>
+                <td>{{node.total_gpu_memory_using_percent}}</td>
+                <td>{{node.total_gpu_memory_using_mb}}</td>
+                <td>{{node.free_disk_gb}}</td>
+                <td>{{node.free_memory_gb}}</td>
+                <td>{{node.free_disk_percent}}</td>
+                <td>{{node.total_memory_using_percent}}</td>
+                <td>{{node.total_cpu_using_percent}}</td>
+                <td>{{node.free_cpu_percent}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+    </div>
+
+    <div>
+        <h1>DiskFixed 정보</h1>
+        <table>
+            <tr>
+                <td>IP 주소</td>
+                <td>DISK 이름</td>
+                <td>각 디스크 총 메모리(GB)</td>
+            </tr>
+            {% for disk in diskFixed %}
+            <tr>
+                <td>{{disk.ip}}</td>
+                <td>{{disk.disk_path}}</td>
+                <td>{{disk.each_total_disk_capacity_gb}}</td>
+            </tr>
+            {%endfor%}   
+        </table>
+    </div>
+
+    <div>
+        <h1>DiskChange 정보</h1>
+        <table>
+            <tr>
+                <td>IP주소</td>
+                <td>시간</td>
+                <td>디스크이름</td>
+                <td>각 디스크 사용량(GB)</td>
+                <td>각 디스크 사용량(%)</td>
+            </tr>
+            {% for disks in diskChange %}
+            <tr align="center">
+                <td>{{disks.create_at}}</td>
+                <td>{{disks.disk_path}}</td>
+                <td>{{disks.ip}}</td>
+                <td>{{disks.disk_using_gb}}</td>
+                <td>{{disks.disk_using_percent}}</td>
+            </tr>
+            {%endfor%} 
+        </table>
+    </div>
+
+
+    <tr>
+</tr>
+
+</body>
+</html>

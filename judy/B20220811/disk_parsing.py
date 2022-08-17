@@ -1,3 +1,4 @@
+from msilib.schema import Error
 import os
 import paramiko
 

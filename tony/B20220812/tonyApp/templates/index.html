@@ -2,6 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+    $('document').ready(function(){
+        timer = setInterval( function (){
+            $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:8001/refresh",
+            data: {},
+            success: function(response){
+                print("response :: ", response)
+                $('#nodeChange').append(`<td>${response['nodeChange.created_at']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.ip.ip']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.total_gpu_memory_using_percent']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.total_gpu_memory_using_mb']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.free_disk_gb']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.free_memory_gb']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.free_disk_percent']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.total_memory_using_percent']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.total_cpu_using_percent']}</p>`);
+                $('#nodeChange').append(`<td>${response['nodeChange.free_cpu_percent']}</p>`);  
+            }
+        })
+        }, 5000);
+    })
+
+    </script>
     <title>Title</title>
     <style>
         table{
@@ -67,9 +94,9 @@
             </tr>
 
             {% for node in nodeChange %}
-            <tr align="center">
+            <tr align="center", id="nodeChange">
                 <td>{{node.created_at}}</td>
-                <td>{{node.ip}}</td>
+                <td>{{node.ip.ip}}</td>
                 <td>{{node.total_gpu_memory_using_percent}}</td>
                 <td>{{node.total_gpu_memory_using_mb}}</td>
                 <td>{{node.free_disk_gb}}</td>
@@ -96,7 +123,7 @@
             {% for disk in diskFixed %}
             <tr align="center">
                 <td>{{disk.disk_path}}</td>
-                <td>{{disk.ip}}</td>
+                <td>{{disk.ip.ip}}</td>
                 <td>{{disk.each_total_disk_capacity_gb}}</td>
             </tr>
             {%endfor%}   
@@ -119,7 +146,7 @@
             <tr align="center">
                 <td>{{disk.create_at}}</td>
                 <td>{{disk.disk_path}}</td>
-                <td>{{disk.ip}}</td>
+                <td>{{disk.ip.ip}}</td>
                 <td>{{disk.disk_using_gb}}</td>
                 <td>{{disk.disk_using_percent}}</td>
             </tr>
@@ -140,7 +167,7 @@
             {% for gpu in gpuFixed %}
             <tr align="center">
                 <td>{{gpu.gpu_index}}</td>
-                <td>{{gpu.ip}}</td>
+                <td>{{gpu.ip.ip}}</td>
                 <td>{{gpu.each_total_gpu_memory_capacity_mb}}</td>
                 <td>{{gpu.gpu_name}}</td>
             </tr>
@@ -163,7 +190,7 @@
             <tr align="center">
                 <td>{{gpu.created_at}}</td>
                 <td>{{gpu.gpu_index}}</td>
-                <td>{{gpu.ip}}</td>
+                <td>{{gpu.ip.ip}}</td>
                 <td>{{gpu.gpu_memory_using_mb}}</td>
                 <td>{{gpu.gpu_memory_using_percent}}</td>
             </tr>

@@ -1,7 +1,7 @@
 import os
 import psutil
 import paramiko
-
+import time
 class Node:
     def __init__(self, ssh) -> None:
         self.node_fixed_info ={}
@@ -28,8 +28,8 @@ class Node:
         stdout = stdout.readline().split()
         all_mem :int =int(int(stdout[1])/1024)
         
-        self.node_fixed_info["ip"] =ip
-        self.node_fixed_info["host_name"] = host_name
+        self.node_fixed_info["ip"] =ip[:20]
+        self.node_fixed_info["host_name"] = host_name[:50]
         self.node_fixed_info["total_memory_capacity_GB"] = all_mem
 
     def changing_refresh(self,ssh):
@@ -44,10 +44,12 @@ class Node:
 
 
 if __name__ == "__main__":
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
-                username="oem", password='baro')  # customer
-    node = Node(ssh)
-    print(node.get_node_fixed_info())
-    print(node.get_node_changing_info())
+    while(True):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect("192.168.20.115", port='22',  
+                    username="oem", password='baro')  # customer
+        node = Node(ssh)
+        print(node.get_node_fixed_info())
+        print(node.get_node_changing_info())
+        time.sleep(2)

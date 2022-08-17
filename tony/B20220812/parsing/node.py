@@ -51,3 +51,4 @@ if __name__ == "__main__":
         print(node.get_node_fixed_info())
         print(node.get_node_changing_info())
         time.sleep(2)
+    

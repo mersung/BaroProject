@@ -2,7 +2,7 @@ from django.db import models
 
 class DiskChange(models.Model):
     create_at = models.DateTimeField(primary_key=True)
-    disk_path = models.ForeignKey('DiskFixed', models.DO_NOTHING, db_column='disk_path', related_name="+")
+    disk_path =models.CharField(max_length=50)
     ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip', related_name="+")
     disk_using_gb = models.IntegerField(db_column='disk_using_GB')  # Field name made lowercase.
     disk_using_percent = models.FloatField()
@@ -26,7 +26,7 @@ class DiskFixed(models.Model):
 
 class GpuChange(models.Model):
     created_at = models.DateTimeField(primary_key=True)
-    gpu_index = models.ForeignKey('GpuFixed', models.DO_NOTHING, db_column='gpu_index', related_name="+")
+    gpu_index = models.IntegerField()
     ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip', related_name="+")
     gpu_memory_using_mb = models.IntegerField(db_column='gpu_memory_using_MB')  # Field name made lowercase.
     gpu_memory_using_percent = models.FloatField()

@@ -1,7 +1,7 @@
 from chris.B20220809.node import Node
 from felix.B20220811.cpu import CPU
 from judy.B20220811.disk_parsing import Disk
-from tony.B20220809.gpu import Gpu
+from tony.B20220811.gpu import Gpu
 import time
 import pymysql
 import paramiko
@@ -15,7 +15,7 @@ class AdminDB:
 
         self.node = Node()
         self.cpu = CPU()
-        self.gpu = Gpu()
+        self.gpu = Gpu(self.ssh)
         self.disk = Disk(self.ssh)
 
         self.conn = conn

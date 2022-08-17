@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HWChange</title>
+</head>
+
+<body>
+    <div>
+        <h4 style="text-align: center;"><B>Node</B></h4>
+        <table border="1px" style="text-align: center;">
+            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+                <tr>
+                    <td>IP</td>
+                    <td>Timestamp</td>
+                    <td>총 GPU 메모리 사용량(%)</td>
+                    <td>총 GPU 메모리 사용량(MB)</td>
+                    <td>사용 가능 Disk 양(GB)</td>
+                    <td>사용 가능 Disk 양(%)</td>
+                    <td>메모리 사용량(%)</td>
+                    <td>사용 가능 메모리 양(GB)</td>
+                    <td>CPU 사용량(%)</td>
+                    <td>사용 가능 CPU 양(%)</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                {% for result in node_result %}
+                <tr>
+                    <td>{{result.ip.ip}}</td>
+                    <td>{{result.created_at}}</td>
+                    <td>{{result.total_gpu_memory_using_percent}} </td>
+                    <td>{{result.total_gpu_memory_using_mb}} MB</td>
+                    <td>{{result.free_disk_gb}} GB</td>
+                    <td>{{result.free_disk_percent}} </td>
+                    <td>{{result.total_memory_using_percent}} </td>
+                    <td>{{result.free_memory_gb}} GB</td>
+                    <td>{{result.total_cpu_using_percent}} </td>
+                    <td>{{result.free_cpu_percent}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4 style="text-align: center;"><B>Disk</B></h4>
+        <table border="1px">
+            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+                <tr>
+                    <td>IP</td>
+                    <td>Timestamp</td>
+                    <td>디스크 경로</td>
+                    <td>각 디스크 사용량(GB)</td>
+                    <td>각 디스크 사용량(%)</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                {% for result in disk_result %}
+                <tr>
+                    <td>{{result.ip.ip}}</td>
+                    <td>{{result.create_at}}</td>
+                    <td>{{result.disk_path}}</td>
+                    <td>{{result.disk_using_gb}} GB</td>
+                    <td>{{result.disk_using_percent}} </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h4 style="text-align: center;"><B>GPU</B></h4>
+        <table border="1px">
+            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+                <tr>
+                    <td>IP</td>
+                    <td>인덱스</td>
+                    <td>Timestamp</td>
+                    <td>각 GPU 메모리 사용량(MB)</td>
+                    <td>각 GPU 메모리 사용량(%)</td>
+                </tr>
+            </thead>
+            <tbody style="text-align: center;">
+                {% for result in gpu_result %}
+                <tr>
+                    <td>{{result.ip.ip}}</td>
+                    <td>{{result.gpu_index}}</td>
+                    <td>{{result.created_at}}</td>
+                    <td>{{result.gpu_memory_using_mb}} MB</td>
+                    <td>{{result.gpu_memory_using_percent}} MB</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <button id="b">push</button>
+        <p id="p">Test</p>
+    </div>
+</body>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<!-- <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
+<script>
+    var p = document.getElementById('p')
+    var b = document.getElementById('b')
+
+    // intervals()
+    func1()
+
+    function func1() {
+        console.log("func1!")
+
+        $.ajax({
+            url: "http://127.0.0.1:8080/HW/load/",
+            type: "get",
+            dataType: "json",
+
+            success: function (data) {
+
+                console.log(data)
+
+                for (var d in data) {
+                    console.log(d)
+                }
+
+            }
+        });
+    }
+
+
+    // 주기적으로 실행
+    function intervals() {
+        func1();	//ajax
+
+        setInterval(func1, 2000);
+    }
+</script>
+
+</html>

@@ -34,8 +34,13 @@ class CPU:
         #     raise Exception("fixed_data: shell 명령어 입력 에러")
 
         stdin, stdout, stderr = self.ssh.exec_command("cat /proc/cpuinfo | grep 'model name' | tail -1")
-        print(''.join(stdout.readlines()))
+        cpu_name: str = ''.join(stdout.readlines()).split(":")[-1].strip()
 
+        stdin, stdout, stderr = self.ssh.exec_command("cat /proc/cpuinfo | grep 'cpu cores' | tail -1")
+        cpu_core: int = int(''.join(stdout.readlines()).split(":")[-1].strip())
+
+        stdin, stdout, stderr = self.ssh.exec_command("cat /proc/cpuinfo | grep 'siblings' | tail -1")
+        cpu_thread: int = int(''.join(stdout.readlines()).split(":")[-1].strip())
 
         self.fixed_cpu_info["cpu_name"] = cpu_name
         self.fixed_cpu_info["number_of_core"] = cpu_core
@@ -59,7 +64,11 @@ class CPU:
         self.changed_cpu_info["free_cpu_percent"] = usable_cpu
 
 if __name__ == "__main__":
-    cpu = CPU()
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+                username="oem", password='baro')  # customer
+    cpu = CPU(ssh)
     while True:
-        cpu.changed_data()
+        cpu.fixed_data()
         time.sleep(0.8)

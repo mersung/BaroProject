@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        table{
+            width : 100%;
+            border: 1px solid #444444;
+        }
+        tr,td {
+            border: 1px solid #444444;
+        }
+        h1{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div>
+        <h1>NodeChange 정보</h1>
+        <button id="submit_button">제출</button>
+        <table>
+            <tr align="center">
+                <td>시간</td>
+                <td>IP주소</td>
+                <td>총 GPU메모리 사용량(%)</td>
+                <td>총 GPU메모리 사용량(MB)</td>
+                <td>사용가능 DISK(GB)</td>
+                <td>사용가능 메모리(GB)</td>
+                <td>사용가능 DISK(%)</td>
+                <td>메모리 사용량(%)</td>
+                <td>총 CPU 사용량(%)</td>
+                <td>사용가능한 CPU사용량(%)</td>
+            </tr>
+            
+            <!--
+            {% for node in nodes %}
+            <tr align="center">
+                <td>{{node.created_at}}</td>
+                <td>{{node.ip.ip}}</td>
+                <td>{{node.total_gpu_memory_using_percent}}</td>
+                <td>{{node.total_gpu_memory_using_MB}}</td>
+                <td>{{node.free_disk_GB}}</td>
+                <td>{{node.free_memory_GB}}</td>
+                <td>{{node.free_disk_percent}}</td>
+                <td>{{node.total_memory_using_percent}}</td>
+                <td>{{node.total_cpu_using_percent}}</td>
+                <td>{{node.free_cpu_percent}}</td>
+            </tr>
+            {%endfor%}
+            -->
+        </table>
+
+    </div>
+
+
+    
+    <div>
+        <h1>DiskChange 정보</h1>
+
+        <table>
+            <tr align="center">
+                <td>시간</td>
+                <td>디스크이름</td>
+                <td style="width: 200px;">IP주소</td>
+                <td>각 디스크 사용량(GB)</td>
+                <td>각 디스크 사용량(%)</td>
+            </tr>
+            <!--
+            {% for disk in disks %}
+            <tr align="center">
+                <td>{{disk.create_at}}</td>
+                <td>{{disk.disk_path}}</td>
+                <td>{{disk.ip.ip}}</td>
+                <td>{{disk.disk_using_GB}}</td>
+                <td>{{disk.disk_using_percent}}</td>
+            </tr>
+            {%endfor%}
+            -->
+        </table>
+    </div>
+    
+
+    
+    <div>
+        <h1>GpuChange 정보</h1>
+
+        <table>
+            <tr align="center">
+                <td>시간</td>
+                <td>인덱스</td>
+                <td>IP주소</td>
+                <td>각 GPU 메모리 사용량(MB)</td>
+                <td>각 GPU 메모리 사용률(%)</td>
+            </tr>
+
+            <!--
+            {% for gpu in gpus %}
+            <tr align="center">
+                <td>{{gpu.created_at}}</td>
+                <td>{{gpu.gpu_index}}</td>
+                <td>{{gpu.ip.ip}}</td>
+                <td>{{gpu.gpu_memory_using_MB}}</td>
+                <td>{{gpu.gpu_memory_using_percent}}</td>
+            </tr>
+            {%endfor%}
+            -->
+        </table>
+    </div>
+    <script type="text/javascript">
+        $.ajaxSetup({
+             headers: { "X-CSRFToken": '{{csrf_token}}' }
+        });
+        $('#submit_button').click(function(e) {
+            $.ajax({
+                type: 'GET',
+                url: 'http://127.0.0.1:8008/base/refresh/',
+                success:function(json) {
+                    console.log("data success", json);
+                },
+                error:function(xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+            })
+        })
+    </script>
+</body>
+</html>
