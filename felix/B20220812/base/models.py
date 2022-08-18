@@ -11,7 +11,7 @@ from django.db import models
 class DiskChanged(models.Model):
     disk_changed_id = models.AutoField(primary_key=True)
     ip = models.ForeignKey('NodeFixed', models.CASCADE, db_column='ip')
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     disk_using_GB = models.IntegerField(db_column='disk_using_GB')  # Field name made lowercase.
     disk_using_percent = models.FloatField()
     disk_path = models.CharField(max_length=50)

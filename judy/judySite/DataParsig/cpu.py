@@ -34,14 +34,19 @@ class CPU:
         #     raise Exception("fixed_data: shell 명령어 입력 에러")
 
         try:
-            stdin, stdout, stderr = self.ssh.exec_command("cat /proc/cpuinfo | grep 'model name' | tail -1")
+            stdin, stdout, stderr = self.ssh.exec_command(
+                "cat /proc/cpuinfo | grep 'model name' | tail -1")
             cpu_name: str = ''.join(stdout.readlines()).split(":")[-1].strip()
 
-            stdin, stdout, stderr = self.ssh.exec_command("cat /proc/cpuinfo | grep 'cpu cores' | tail -1")
-            cpu_core: int = int(''.join(stdout.readlines()).split(":")[-1].strip())
+            stdin, stdout, stderr = self.ssh.exec_command(
+                "cat /proc/cpuinfo | grep 'cpu cores' | tail -1")
+            cpu_core: int = int(
+                ''.join(stdout.readlines()).split(":")[-1].strip())
 
-            stdin, stdout, stderr = self.ssh.exec_command("cat /proc/cpuinfo | grep 'siblings' | tail -1")
-            cpu_thread: int = int(''.join(stdout.readlines()).split(":")[-1].strip())
+            stdin, stdout, stderr = self.ssh.exec_command(
+                "cat /proc/cpuinfo | grep 'siblings' | tail -1")
+            cpu_thread: int = int(
+                ''.join(stdout.readlines()).split(":")[-1].strip())
         except:
             raise Exception("changed_data: shell 명령어 입력 에러")
 
@@ -58,7 +63,8 @@ class CPU:
             # top -n2 -d 0.0000000001 | grep "Cpu(s)" | tail -1
             # 터미널 이용하면 앞에 이상한 바이너리가 붙어서 온다. 이를 삭제해 줘야한다.
             # top은 두번째 실행부터 제대로된 값을 뱉는데.. 이렇게 하는게 맞는지 의문임.
-            usable_cpu = round(float(os.popen("top -n2 -d 0.00001 | grep 'Cpu(s)' | tail -1").read().split(",")[3].replace("\x1b(B\x1b[m\x1b[39;49m\x1b[1m", "").split()[0]), 3)
+            usable_cpu = round(float(os.popen("top -n2 -d 0.00001 | grep 'Cpu(s)' | tail -1").read(
+            ).split(",")[3].replace("\x1b(B\x1b[m\x1b[39;49m\x1b[1m", "").split()[0]), 3)
             # print("usablse :",usable_cpu)
         except:
             raise Exception("changed_data: shell 명령어 입력 에러")
@@ -71,10 +77,11 @@ class CPU:
     def __str__(self):
         s = ""
         for c in self.fixed_cpu_info.values():
-            s += str(c) + "\n";
+            s += str(c) + "\n"
         for c in self.changed_cpu_info.values():
-            s += str(c) + "\n";
+            s += str(c) + "\n"
         return s
+
 
 if __name__ == "__main__":
     ssh = paramiko.SSHClient()

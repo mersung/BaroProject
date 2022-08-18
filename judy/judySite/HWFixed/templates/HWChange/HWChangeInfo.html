@@ -12,8 +12,8 @@
         <table border="1px" style="text-align: center;">
             <thead style="background-color: rgba(255, 222, 42); text-align: center;">
                 <tr>
-                    <td>IP</td>
                     <td>Timestamp</td>
+                    <td>IP</td>
                     <td>총 GPU 메모리 사용량(%)</td>
                     <td>총 GPU 메모리 사용량(MB)</td>
                     <td>사용 가능 Disk 양(GB)</td>
@@ -27,8 +27,8 @@
             <tbody style="text-align: center;">
                 {% for result in node_result %}
                 <tr>
-                    <td>{{result.ip.ip}}</td>
                     <td>{{result.created_at}}</td>
+                    <td>{{result.ip.ip}}</td>
                     <td>{{result.total_gpu_memory_using_percent}} </td>
                     <td>{{result.total_gpu_memory_using_mb}} MB</td>
                     <td>{{result.free_disk_gb}} GB</td>
@@ -48,8 +48,8 @@
         <table border="1px">
             <thead style="background-color: rgba(255, 222, 42); text-align: center;">
                 <tr>
-                    <td>IP</td>
                     <td>Timestamp</td>
+                    <td>IP</td>
                     <td>디스크 경로</td>
                     <td>각 디스크 사용량(GB)</td>
                     <td>각 디스크 사용량(%)</td>
@@ -58,8 +58,8 @@
             <tbody style="text-align: center;">
                 {% for result in disk_result %}
                 <tr>
-                    <td>{{result.ip.ip}}</td>
                     <td>{{result.create_at}}</td>
+                    <td>{{result.ip.ip}}</td>
                     <td>{{result.disk_path}}</td>
                     <td>{{result.disk_using_gb}} GB</td>
                     <td>{{result.disk_using_percent}} </td>
@@ -74,9 +74,9 @@
         <table border="1px">
             <thead style="background-color: rgba(255, 222, 42); text-align: center;">
                 <tr>
+                    <td>Timestamp</td>
                     <td>IP</td>
                     <td>인덱스</td>
-                    <td>Timestamp</td>
                     <td>각 GPU 메모리 사용량(MB)</td>
                     <td>각 GPU 메모리 사용량(%)</td>
                 </tr>
@@ -84,9 +84,9 @@
             <tbody style="text-align: center;">
                 {% for result in gpu_result %}
                 <tr>
+                    <td>{{result.created_at}}</td>
                     <td>{{result.ip.ip}}</td>
                     <td>{{result.gpu_index}}</td>
-                    <td>{{result.created_at}}</td>
                     <td>{{result.gpu_memory_using_mb}} MB</td>
                     <td>{{result.gpu_memory_using_percent}} MB</td>
                 </tr>
@@ -94,24 +94,20 @@
             </tbody>
         </table>
     </div>
-
-    <div>
-        <button id="b">push</button>
-        <p id="p">Test</p>
-    </div>
 </body>
 
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-<!-- <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    var p = document.getElementById('p')
-    var b = document.getElementById('b')
 
-    // intervals()
-    func1()
+    intervals()
 
-    function func1() {
-        console.log("func1!")
+    function intervals() {
+        setInterval(update, 8000)
+    }
+
+    function update() {
+
+        console.log("Update")
 
         $.ajax({
             url: "http://127.0.0.1:8080/HW/load/",
@@ -120,23 +116,37 @@
 
             success: function (data) {
 
-                console.log(data)
+                if (JSON.stringify(data) != '{}') {
 
-                for (var d in data) {
-                    console.log(d)
+                    // node
+                    var node_table = data['node_result']
+                    for (var i = 0; i < node_table.length; i++) {
+                        console.log(node_table[i])
+                    }
+
+                    // disk
+                    var disk_table = data['disk_result']
+                    for (var i = 0; i < disk_table.length; i++) {
+                        console.log(disk_table[i])
+                    }
+
+                    // gpu
+                    var gpu_table = data['gpu_result']
+                    for (var i = 0; i < gpu_table.length; i++) {
+                        console.log(gpu_table[i])
+                    }
                 }
 
+            },
+
+            error: function (xhr, errmsg, err) {
+                console.log(xhr.status + ": " + xhr.responseText);
             }
         });
     }
 
 
-    // 주기적으로 실행
-    function intervals() {
-        func1();	//ajax
 
-        setInterval(func1, 2000);
-    }
 </script>
 
 </html>

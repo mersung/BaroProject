@@ -11,8 +11,8 @@ from django.db import models
 
 class DiskChange(models.Model):
     create_at = models.DateTimeField(primary_key=True)
-    disk_path = models.ForeignKey('DiskFixed', models.DO_NOTHING, db_column='disk_path', related_name ='+')
-    ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip')
+    disk_path = models.ForeignKey('DiskFixed', models.CASCADE, db_column='disk_path', related_name ='+')
+    ip = models.ForeignKey('NodeFixed', models.CASCADE, db_column='ip')
     disk_using_gb = models.IntegerField(db_column='disk_using_GB')  # Field name made lowercase.
     disk_using_percent = models.FloatField()
 
@@ -24,7 +24,7 @@ class DiskChange(models.Model):
 
 class DiskFixed(models.Model):
     disk_path = models.CharField(primary_key=True, max_length=50)
-    ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip',related_name ='+')
+    ip = models.ForeignKey('NodeFixed', models.CASCADE, db_column='ip',related_name ='+')
     each_total_disk_capacity_gb = models.IntegerField(db_column='each_total_disk_capacity_GB')  # Field name made lowercase.
 
     class Meta:
@@ -35,8 +35,8 @@ class DiskFixed(models.Model):
 
 class GpuChange(models.Model):
     created_at = models.DateTimeField(primary_key=True)
-    gpu_index = models.ForeignKey('GpuFixed', models.DO_NOTHING, db_column='gpu_index',related_name ='+')
-    ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip')
+    gpu_index = models.ForeignKey('GpuFixed', models.CASCADE, db_column='gpu_index',related_name ='+')
+    ip = models.ForeignKey('NodeFixed', models.CASCADE, db_column='ip')
     gpu_memory_using_mb = models.IntegerField(db_column='gpu_memory_using_MB')  # Field name made lowercase.
     gpu_memory_using_percent = models.FloatField()
 
@@ -48,7 +48,7 @@ class GpuChange(models.Model):
 
 class GpuFixed(models.Model):
     gpu_index = models.IntegerField(primary_key=True)
-    ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip', related_name ='+')
+    ip = models.ForeignKey('NodeFixed', models.CASCADE, db_column='ip', related_name ='+')
     each_total_gpu_memory_capacity_mb = models.IntegerField(db_column='each_total_gpu_memory_capacity_MB')  # Field name made lowercase.
     gpu_name = models.CharField(max_length=50)
 
@@ -60,7 +60,7 @@ class GpuFixed(models.Model):
 
 class NodeChange(models.Model):
     created_at = models.DateTimeField(primary_key=True)
-    ip = models.ForeignKey('NodeFixed', models.DO_NOTHING, db_column='ip', related_name ='+')
+    ip = models.ForeignKey('NodeFixed', models.CASCADE, db_column='ip', related_name ='+')
     total_gpu_memory_using_percent = models.FloatField()
     total_gpu_memory_using_mb = models.FloatField(db_column='total_gpu_memory_using_MB')  # Field name made lowercase.
     free_disk_gb = models.IntegerField(db_column='free_disk_GB')  # Field name made lowercase.
@@ -102,8 +102,8 @@ class AuthGroup(models.Model):
 
 class AuthGroupPermissions(models.Model):
     id = models.BigAutoField(primary_key=True)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING, related_name ='+')
-    permission = models.ForeignKey('AuthPermission', models.DO_NOTHING, related_name ='+')
+    group = models.ForeignKey(AuthGroup, models.CASCADE, related_name ='+')
+    permission = models.ForeignKey('AuthPermission', models.CASCADE, related_name ='+')
 
     class Meta:
         managed = False
@@ -113,7 +113,7 @@ class AuthGroupPermissions(models.Model):
 
 class AuthPermission(models.Model):
     name = models.CharField(max_length=255)
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, related_name ='+')
+    content_type = models.ForeignKey('DjangoContentType', models.CASCADE, related_name ='+')
     codename = models.CharField(max_length=100)
 
     class Meta:
@@ -141,8 +141,8 @@ class AuthUser(models.Model):
 
 class AuthUserGroups(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    group = models.ForeignKey(AuthGroup, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser, models.CASCADE)
+    group = models.ForeignKey(AuthGroup, models.CASCADE)
 
     class Meta:
         managed = False
@@ -152,8 +152,8 @@ class AuthUserGroups(models.Model):
 
 class AuthUserUserPermissions(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
-    permission = models.ForeignKey(AuthPermission, models.DO_NOTHING)
+    user = models.ForeignKey(AuthUser, models.CASCADE)
+    permission = models.ForeignKey(AuthPermission, models.CASCADE)
 
     class Meta:
         managed = False
@@ -165,8 +165,8 @@ class BaroDiskchanged(models.Model):
     created_at = models.DateTimeField(primary_key=True)
     disk_using_gb = models.IntegerField(db_column='disk_using_GB')  # Field name made lowercase.
     disk_using_percent = models.IntegerField()
-    disk_path = models.ForeignKey('BaroDiskfixed', models.DO_NOTHING, db_column='disk_path')
-    ip = models.ForeignKey('BaroNodefixed', models.DO_NOTHING, db_column='ip')
+    disk_path = models.ForeignKey('BaroDiskfixed', models.CASCADE, db_column='disk_path')
+    ip = models.ForeignKey('BaroNodefixed', models.CASCADE, db_column='ip')
 
     class Meta:
         managed = False
@@ -177,7 +177,7 @@ class BaroDiskchanged(models.Model):
 class BaroDiskfixed(models.Model):
     disk_path = models.CharField(primary_key=True, max_length=50)
     each_total_disk_capacity_gb = models.IntegerField(db_column='each_total_disk_capacity_GB')  # Field name made lowercase.
-    ip = models.ForeignKey('BaroNodefixed', models.DO_NOTHING, db_column='ip')
+    ip = models.ForeignKey('BaroNodefixed', models.CASCADE, db_column='ip')
 
     class Meta:
         managed = False
@@ -189,8 +189,8 @@ class BaroGpuchanged(models.Model):
     created_at = models.DateTimeField(primary_key=True)
     gpu_memory_using_mb = models.IntegerField(db_column='gpu_memory_using_MB')  # Field name made lowercase.
     gpu_memory_using_percent = models.FloatField()
-    gpu_index = models.ForeignKey('BaroGpufixed', models.DO_NOTHING, db_column='gpu_index')
-    ip = models.ForeignKey('BaroNodefixed', models.DO_NOTHING, db_column='ip')
+    gpu_index = models.ForeignKey('BaroGpufixed', models.CASCADE, db_column='gpu_index')
+    ip = models.ForeignKey('BaroNodefixed', models.CASCADE, db_column='ip')
 
     class Meta:
         managed = False
@@ -202,7 +202,7 @@ class BaroGpufixed(models.Model):
     gpu_index = models.IntegerField(primary_key=True)
     each_total_gpu_memory_capacity_mb = models.IntegerField(db_column='each_total_gpu_memory_capacity_MB')  # Field name made lowercase.
     gpu_name = models.CharField(max_length=50)
-    ip = models.ForeignKey('BaroNodefixed', models.DO_NOTHING, db_column='ip')
+    ip = models.ForeignKey('BaroNodefixed', models.CASCADE, db_column='ip')
 
     class Meta:
         managed = False
@@ -220,7 +220,7 @@ class BaroNodechanged(models.Model):
     total_memory_using_percent = models.FloatField()
     total_cpu_using_percent = models.FloatField()
     free_cpu_percent = models.FloatField()
-    ip = models.ForeignKey('BaroNodefixed', models.DO_NOTHING, db_column='ip')
+    ip = models.ForeignKey('BaroNodefixed', models.CASCADE, db_column='ip')
 
     class Meta:
         managed = False
@@ -250,8 +250,8 @@ class DjangoAdminLog(models.Model):
     object_repr = models.CharField(max_length=200)
     action_flag = models.PositiveSmallIntegerField()
     change_message = models.TextField()
-    content_type = models.ForeignKey('DjangoContentType', models.DO_NOTHING, blank=True, null=True)
-    user = models.ForeignKey(AuthUser, models.DO_NOTHING)
+    content_type = models.ForeignKey('DjangoContentType', models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(AuthUser, models.CASCADE)
 
     class Meta:
         managed = False

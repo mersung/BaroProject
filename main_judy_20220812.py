@@ -253,7 +253,7 @@ if __name__ == "__main__":
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.114", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
                 username="oem", password='baro')  # customer
 
     admindb = AdminDB(conn, cur, ssh)
@@ -261,20 +261,20 @@ if __name__ == "__main__":
     # stdin, stdout, stderr = ssh.exec_command('df -h')
     # print(''.join(stdout.readlines()))
 
-    # try:
-    #     admindb.fixed_insert_db()
-    #     while True:
-    #         admindb.changed_insert_db()
-    #         time.sleep(2)
+    try:
+        # admindb.fixed_insert_db()
+        while True:
+            admindb.changed_insert_db()
+            time.sleep(5)
 
-    # except KeyboardInterrupt:
-    #     conn.close()
+    except KeyboardInterrupt:
+        conn.close()
 
-    # except:
-    #     conn.close()
-    #     print("Wrong")
+    except:
+        conn.close()
+        print("Wrong")
 
-    admindb.get_fixed_DB()
-    admindb.get_change_DB()
+    # admindb.get_fixed_DB()
+    # admindb.get_change_DB()
 
     ssh.close()

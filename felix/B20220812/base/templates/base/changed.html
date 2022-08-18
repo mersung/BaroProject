@@ -19,11 +19,10 @@
     </style>
 </head>
 <body>
-    
+    <span id="ip">{{ ip }}</span>
     <div>
         <h1>NodeChange 정보</h1>
-        <button id="submit_button">제출</button>
-        <table>
+        <table id="node_table">
             <tr align="center">
                 <td>시간</td>
                 <td>IP주소</td>
@@ -62,7 +61,7 @@
     <div>
         <h1>DiskChange 정보</h1>
 
-        <table>
+        <table id="disk_table">
             <tr align="center">
                 <td>시간</td>
                 <td>디스크이름</td>
@@ -89,7 +88,7 @@
     <div>
         <h1>GpuChange 정보</h1>
 
-        <table>
+        <table id="gpu_table">
             <tr align="center">
                 <td>시간</td>
                 <td>인덱스</td>
@@ -112,21 +111,58 @@
         </table>
     </div>
     <script type="text/javascript">
+        var node_cnt = 0;
+        var disk_cnt = 0;
+        var gpu_cnt = 0;
         $.ajaxSetup({
              headers: { "X-CSRFToken": '{{csrf_token}}' }
         });
-        $('#submit_button').click(function(e) {
+        setInterval(function(e) {
             $.ajax({
-                type: 'GET',
-                url: 'http://127.0.0.1:8008/base/refresh/',
-                success:function(json) {
-                    console.log("data success", json);
+                type: 'POST',
+                url: 'http://127.0.0.1:8888/base/changed/',
+                dataType: "json",
+                data: {"ip": $('#ip').html()},
+                success:function(response) {
+                    console.log("data success", response);
+                    $('#node_table').append(`<tr id="node_${node_cnt}" align="center"></tr>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['created_at']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['ip_id']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['total_gpu_memory_using_percent']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['total_gpu_memory_using_MB']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['free_disk_GB']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['free_memory_GB']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['free_disk_percent']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['total_memory_using_percent']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['total_cpu_using_percent']}</td>`);
+                    $('#node_' + (node_cnt)).append(`<td>${response['node']['free_cpu_percent']}</td>`);
+                    node_cnt += 1;
+
+                    for(var l=0; l<response['disks'].length; l++) {
+                        $('#disk_table').append(`<tr id="disk_${disk_cnt}" align="center"></tr>`);
+                        $('#disk_'+(disk_cnt)).append(`<td>${response['disks'][l]['created_at']}</td>`);
+                        $('#disk_'+(disk_cnt)).append(`<td>${response['disks'][l]['disk_path']}</td>`);
+                        $('#disk_'+(disk_cnt)).append(`<td>${response['disks'][l]['ip_id']}</td>`);
+                        $('#disk_'+(disk_cnt)).append(`<td>${response['disks'][l]['disk_using_GB']}</td>`);
+                        $('#disk_'+(disk_cnt)).append(`<td>${response['disks'][l]['disk_using_percent']}</td>`);
+                        disk_cnt += 1;
+                    }
+
+                    for(var l=0; l<response['gpus'].length; l++) {
+                        $('#gpu_table').append(`<tr id="gpu_${gpu_cnt}" align="center"></tr>`);
+                        $('#gpu_'+(gpu_cnt)).append(`<td>${response['gpus'][l]['created_at']}</td>`);
+                        $('#gpu_'+(gpu_cnt)).append(`<td>${response['gpus'][l]['gpu_index']}</td>`);
+                        $('#gpu_'+(gpu_cnt)).append(`<td>${response['gpus'][l]['ip_id']}</td>`);
+                        $('#gpu_'+(gpu_cnt)).append(`<td>${response['gpus'][l]['gpu_memory_using_MB']}</td>`);
+                        $('#gpu_'+(gpu_cnt)).append(`<td>${response['gpus'][l]['gpu_memory_using_percent']}</td>`);
+                        gpu_cnt += 1;
+                    }
                 },
                 error:function(xhr, errmsg, err) {
                     console.log(xhr.status + ": " + xhr.responseText);
                 }
             })
-        })
+        }, 3000)
     </script>
 </body>
 </html>

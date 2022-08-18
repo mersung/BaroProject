@@ -1,10 +1,11 @@
-from .node import Node
-from .cpu import CPU
-from .disk import Disk
-from .gpu import Gpu
+from DataParsig.node import Node
+from DataParsig.cpu import CPU
+from DataParsig.disk_parsing import Disk
+from DataParsig.gpu import Gpu
 import time
 import pymysql
 import paramiko
+import threading
 
 
 class AdminDB:
@@ -89,35 +90,6 @@ class AdminDB:
             self.gpu_changed_table[i].update(self.ip)
             self.gpu_changed_table[i].update({'gpu_index': self.gpu_index[i]})
 
-    def changed_insert_db(self):
-        self.mergeChangeKey()
-
-        print("+++++++++++++++++++++++ Changed 값 ++++++++++++++++++++++")
-
-        # Node
-        self.insertDB("NODE_CHANGE", self.node_change_table)
-
-        # Disk
-        self.insertDB("DISK_CHANGE", self.disk_changed_table)
-
-        # GPU
-        self.insertDB("GPU_CHANGE", self.gpu_changed_table)
-
-        print("=================================")
-
-    def fixed_insert_db(self):
-
-        print("+++++++++++++++++++++++ fixed 값 ++++++++++++++++++++++")
-
-        # Node
-        self.insertDB("NODE_FIXED", self.node_fixed_table)
-
-        # Disk
-        self.insertDB("DISK_FIXED", self.disk_fixed_table)
-
-        # GPU
-        self.insertDB("GPU_FIXED", self.gpu_fixed_table)
-
     def makeSQL(self, table: str, data):
         # 넣을 data column
         columns_str: str = " ("
@@ -145,7 +117,7 @@ class AdminDB:
         sql = "INSERT INTO " + table + columns_str + ") VALUES " + values_str + ")"
 
         # DB Insert execute
-        print(sql)
+        # print(sql)
         self.cur.execute(sql)
         self.conn.commit()
 
@@ -153,7 +125,7 @@ class AdminDB:
 
         # Dictionary인 경우
         if type(data) == dict:
-            self.makeSQL(table, data)
+            sql: str = self.makeSQL(table, data)
 
             # 리스트인 경우
         elif type(data) == list:
@@ -162,24 +134,138 @@ class AdminDB:
             for l in data:
                 self.makeSQL(table, l)
 
+    def changed_insert_db(self):
+        self.mergeChangeKey()
+
+        print("+++++++++++++++++++++++ Changed 값 ++++++++++++++++++++++")
+
+        # 프로세스를 생성합니다
+        # p1 = threading.Thread(target=self.insertDB, args=(
+        #     "NODE_CHANGE", self.node_change_table))
+        # p2 = threading.Thread(target=self.insertDB, args=(
+        #     "DISK_CHANGE", self.disk_changed_table))
+        # p3 = threading.Thread(target=self.insertDB, args=(
+        #     "GPU_CHANGE", self.gpu_changed_table))
+
+        # start로 각 프로세스를 시작합니다.
+        # p1.start()
+        # p2.start()
+        # p3.start()
+
+        # # join으로 각 프로세스가 종료되길 기다립니다 p1.join()이 끝난 후 p2.join()을 수행합니다
+        # p1.join()
+        # p2.join()
+        # p3.join()
+
+        # Node
+        self.insertDB("NODE_CHANGE", self.node_change_table)
+
+        # Disk
+        self.insertDB("DISK_CHANGE", self.disk_changed_table)
+
+        # GPU
+        self.insertDB("GPU_CHANGE", self.gpu_changed_table)
+
+        print("=================================")
+
+    def fixed_insert_db(self):
+
+        print("+++++++++++++++++++++++ fixed 값 ++++++++++++++++++++++")
+
+        # 프로세스를 생성합니다
+        # p1 = threading.Thread(target=self.insertDB, args=(
+        #     "NODE_FIXED", self.node_fixed_table))
+        # p2 = threading.Thread(target=self.insertDB, args=(
+        #     "DISK_FIXED", self.disk_fixed_table))
+        # p3 = threading.Thread(target=self.insertDB, args=(
+        #     "GPU_FIXED", self.gpu_fixed_table))
+
+        # # start로 각 프로세스를 시작합니다.
+        # p1.start()
+        # p2.start()
+        # p3.start()
+
+        # # join으로 프로세스 종료 대기. 선행 프로세스가 끝난 다음에 실행
+        # p1.join()
+        # p2.join()
+        # p3.join()
+
+        # Node
+        self.insertDB("NODE_FIXED", self.node_fixed_table)
+
+        # Disk
+        self.insertDB("DISK_FIXED", self.disk_fixed_table)
+
+        # GPU
+        self.insertDB("GPU_FIXED", self.gpu_fixed_table)
+
+    def extractDB(self, table):
+
+        print("++++++++++++++++++++ %s Data ++++++++++++++++++++++++" %
+              (table))
+
+        # 저장할 리스트
+        d_list: list = []
+
+        sql = "SELECT * FROM " + table
+
+        self.cur.execute(sql)
+        result = self.cur.fetchall()
+
+        for r in result:
+            d_list.append(r)
+
+        print(d_list)
+
+        return d_list
+
+    def get_fixed_DB(self):
+
+        print("===================== FIXED 값 추출 ===========================")
+
+        # 리턴할 모든 DATA를 담은 리스트
+        f_list: list = []
+
+        f_list.append(self.extractDB("NODE_FIXED"))
+        f_list.append(self.extractDB("DISK_FIXED"))
+        f_list.append(self.extractDB("GPU_FIXED"))
+
+        return f_list
+
+    def get_change_DB(self):
+        print("===================== CHANGE 값 추출 ===========================")
+
+        # 리턴할 모든 DATA를 담은 리스트
+        c_list: list = []
+
+        c_list.append(self.extractDB("NODE_CHANGE"))
+        c_list.append(self.extractDB("DISK_CHANGE"))
+        c_list.append(self.extractDB("GPU_CHANGE"))
+
+        return c_list
+
 
 if __name__ == "__main__":
 
     conn = pymysql.connect(host='localhost', user='root',
-                                password='baro', db='HWMonitoring', charset='utf8')
+                                password='baro', db='judy', charset='utf8')
     cur = conn.cursor()
 
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.115", port='22', username="oem", password='baro')  
+    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+                username="oem", password='baro')  # customer
 
     admindb = AdminDB(conn, cur, ssh)
-    
+
+    # stdin, stdout, stderr = ssh.exec_command('df -h')
+    # print(''.join(stdout.readlines()))
 
     try:
         admindb.fixed_insert_db()
         while True:
             admindb.changed_insert_db()
+            time.sleep(5)
 
     except KeyboardInterrupt:
         conn.close()
@@ -187,7 +273,8 @@ if __name__ == "__main__":
     except:
         conn.close()
         print("Wrong")
-    # stdin, stdout, stderr = ssh.exec_command('df -h')
-    # print(''.join(stdout.readlines()))
+
+    # admindb.get_fixed_DB()
+    # admindb.get_change_DB()
 
     ssh.close()

@@ -114,11 +114,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True
+# USE_TZ = True일경우, 장고 내부적으로 시간대를 인식하는 날짜 및 시간을 사용하고 USE_TZ = False일 경우, local time을 사용하게 됩니다.
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
