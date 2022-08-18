@@ -126,19 +126,19 @@ class Disk:
             print("Problem with Parsing Disk: [Error] %s")
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.115", port='22',
-                username="oem", password='baro')  # customer
+#     ssh = paramiko.SSHClient()
+#     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#     ssh.connect("192.168.20.115", port='22',
+#                 username="oem", password='baro')  # customer
 
-    disk = Disk(ssh)
+#     disk = Disk(ssh)
 
-    print(disk.get_disk_fixed_list())
-    print(disk.get_node_fixed_disk_info())
+#     print(disk.get_disk_fixed_list())
+#     print(disk.get_node_fixed_disk_info())
 
-    while(True):
-        print(disk.get_disk_change_list())
-        print(disk.get_node_change_disk_info())
-        time.sleep(0.5)
+#     while(True):
+#         print(disk.get_disk_change_list())
+#         print(disk.get_node_change_disk_info())
+#         time.sleep(0.5)

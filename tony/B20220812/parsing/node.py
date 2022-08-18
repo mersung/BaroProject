@@ -41,14 +41,14 @@ class Node:
 
 
 
-if __name__ == "__main__":
-    while(True):
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect("192.168.20.115", port='22',  
-                    username="oem", password='baro')  # customer
-        node = Node(ssh)
-        print(node.get_node_fixed_info())
-        print(node.get_node_changing_info())
-        time.sleep(2)
+# if __name__ == "__main__":
+#     while(True):
+#         ssh = paramiko.SSHClient()
+#         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#         ssh.connect("192.168.20.115", port='22',  
+#                     username="oem", password='baro')  # customer
+#         node = Node(ssh)
+#         print(node.get_node_fixed_info())
+#         print(node.get_node_changing_info())
+#         time.sleep(2)
     

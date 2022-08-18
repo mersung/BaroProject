@@ -21,5 +21,5 @@ import tonyApp.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', tonyApp.views.index, name='index'), # 해당 url이 수신시 view.py의 해당 메소드 실행
-    path('refresh', tonyApp.views.load_data) #ajax로 비동기 통신 요청 
+    path('', tonyApp.views.index, name='index') #ajax로 비동기 통신 요청 
 ]
