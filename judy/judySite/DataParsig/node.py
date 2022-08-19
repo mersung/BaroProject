@@ -44,15 +44,3 @@ class Node:
         self.node_changing_info["free_memory_GB"]: int = free_mem
         self.node_changing_info["total_memory_using_percent"]: float = round(
             using_mem*100, 3)
-
-
-if __name__ == "__main__":
-    while(True):
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect("192.168.20.115", port='22',
-                    username="oem", password='baro')  # customer
-        node = Node(ssh)
-        print(node.get_node_fixed_info())
-        print(node.get_node_changing_info())
-        time.sleep(2)

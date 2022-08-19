@@ -137,18 +137,3 @@ class Gpu:
         self.node_change_gpu_info["total_gpu_memory_using_percent"] = total_gpu_memory_using_percent
         self.node_change_gpu_info["total_gpu_memory_using_MB"] = total_gpu_memory_using_MB
         # return gpus_change
-
-# if __name__ == "__main__":
-
-#     ssh = paramiko.SSHClient()
-#     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-#     ssh.connect("192.168.20.115", port='22', username="oem", password='baro')  # 고객은 자신의 ip를 안다고 가정, 현재는 자기 자신 호출, 고객이 115 부분을 바꿔줌
-
-#     gpu = Gpu(ssh)
-
-#     print(gpu.get_gpu_fixed_list())
-#     print(gpu.get_gpu_change_list())
-#     print(gpu.get_node_fixed_gpu_info())
-#     print(gpu.get_node_change_gpu_info())
-# print(Gpu.gpu_fixed())
-# print(Gpu.gpu_change())

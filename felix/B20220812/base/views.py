@@ -32,6 +32,7 @@ def fixed(request):
     if request.method != "GET":
         return HttpResponse("bad request")
 
+    # query에 ip가 없을 경우
     if "ip" not in request.GET:
         return HttpResponse(status=400)
     print(request.GET.get("ip"))
@@ -82,8 +83,8 @@ def fixed(request):
 
     # print(gpu[0].ip.ip) disk.ip.ip -> disk.ip는 nodefixed 객체임.
 
-    # if len(node) == 0 or len(disk) == 0 or len(gpu):
-    #     return HTTPResponse("bad")
+    if len(node) == 0 or len(disk) == 0 or len(gpu) == 0:
+        return HttpResponse("bad", status=400)
 
     return render(request, 'base/fixed.html', {'gpus': gpu, 'disks': disk, 'node': node[0], 'ip': ip})
 
@@ -92,10 +93,10 @@ def changed(request):
 
     # 전역변수로 선언한 ssh 사용
     # global ssh
-    ip = ""
 
     # http가 get 방식으로 오면 changed.html 리턴
     if request.method == "GET":
+        # ip를 받지 않았을 때
         if "ip" not in request.GET:
             return HttpResponse(status=400)
 

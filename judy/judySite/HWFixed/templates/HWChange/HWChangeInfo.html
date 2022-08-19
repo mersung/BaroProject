@@ -8,101 +8,151 @@
 
 <body>
     <div>
-        <h4 style="text-align: center;"><B>Node</B></h4>
-        <table border="1px" style="text-align: center;">
-            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
-                <tr>
-                    <td>Timestamp</td>
-                    <td>IP</td>
-                    <td>총 GPU 메모리 사용량(%)</td>
-                    <td>총 GPU 메모리 사용량(MB)</td>
-                    <td>사용 가능 Disk 양(GB)</td>
-                    <td>사용 가능 Disk 양(%)</td>
-                    <td>메모리 사용량(%)</td>
-                    <td>사용 가능 메모리 양(GB)</td>
-                    <td>CPU 사용량(%)</td>
-                    <td>사용 가능 CPU 양(%)</td>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-                {% for result in node_result %}
-                <tr>
-                    <td>{{result.created_at}}</td>
-                    <td>{{result.ip.ip}}</td>
-                    <td>{{result.total_gpu_memory_using_percent}} </td>
-                    <td>{{result.total_gpu_memory_using_mb}} MB</td>
-                    <td>{{result.free_disk_gb}} GB</td>
-                    <td>{{result.free_disk_percent}} </td>
-                    <td>{{result.total_memory_using_percent}} </td>
-                    <td>{{result.free_memory_gb}} GB</td>
-                    <td>{{result.total_cpu_using_percent}} </td>
-                    <td>{{result.free_cpu_percent}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <select id="client-select">
+            <option>All Client</option>
+            <option>192.168.20.115</option>
+            <option>192.168.20.114</option>
+        </select>
     </div>
 
-    <div>
-        <h4 style="text-align: center;"><B>Disk</B></h4>
-        <table border="1px">
-            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
-                <tr>
-                    <td>Timestamp</td>
-                    <td>IP</td>
-                    <td>디스크 경로</td>
-                    <td>각 디스크 사용량(GB)</td>
-                    <td>각 디스크 사용량(%)</td>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-                {% for result in disk_result %}
-                <tr>
-                    <td>{{result.create_at}}</td>
-                    <td>{{result.ip.ip}}</td>
-                    <td>{{result.disk_path}}</td>
-                    <td>{{result.disk_using_gb}} GB</td>
-                    <td>{{result.disk_using_percent}} </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <div id="infoDiv">
+        <div>
+            <h2><B>Node</B></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Timestamp</td>
+                        <td>IP</td>
+                        <td>총 GPU 메모리 사용량(%)</td>
+                        <td>총 GPU 메모리 사용량(MB)</td>
+                        <td>사용 가능 Disk 양(GB)</td>
+                        <td>사용 가능 메모리 양(GB)</td>
+                        <td>사용 가능 Disk 양(%)</td>
+                        <td>메모리 사용량(%)</td>
+                        <td>CPU 사용량(%)</td>
+                        <td>사용 가능 CPU 양(%)</td>
+                    </tr>
+                </thead>
+                <tbody id="node">
+                    <!-- {% for result in node_result %}
+                    <tr>
+                        <td>{{result.created_at}}</td>
+                        <td>{{result.ip.ip}}</td>
+                        <td>{{result.total_gpu_memory_using_percent}} </td>
+                        <td>{{result.total_gpu_memory_using_mb}} MB</td>
+                        <td>{{result.free_disk_gb}} GB</td>
+                        <td>{{result.free_disk_percent}} </td>
+                        <td>{{result.total_memory_using_percent}} </td>
+                        <td>{{result.free_memory_gb}} GB</td>
+                        <td>{{result.total_cpu_using_percent}} </td>
+                        <td>{{result.free_cpu_percent}}</td>
+                    </tr>
+                    {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
 
-    <div>
-        <h4 style="text-align: center;"><B>GPU</B></h4>
-        <table border="1px">
-            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
-                <tr>
-                    <td>Timestamp</td>
-                    <td>IP</td>
-                    <td>인덱스</td>
-                    <td>각 GPU 메모리 사용량(MB)</td>
-                    <td>각 GPU 메모리 사용량(%)</td>
-                </tr>
-            </thead>
-            <tbody style="text-align: center;">
-                {% for result in gpu_result %}
-                <tr>
-                    <td>{{result.created_at}}</td>
-                    <td>{{result.ip.ip}}</td>
-                    <td>{{result.gpu_index}}</td>
-                    <td>{{result.gpu_memory_using_mb}} MB</td>
-                    <td>{{result.gpu_memory_using_percent}} MB</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div>
+            <h2><B>Disk</B></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Timestamp</td>
+                        <td>디스크 경로</td>
+                        <td>IP</td>
+                        <td>각 디스크 사용량(GB)</td>
+                        <td>각 디스크 사용량(%)</td>
+                    </tr>
+                </thead>
+                <tbody id="disk">
+                    <!-- {% for result in disk_result %}
+                    <tr>
+                        <td>{{result.create_at}}</td>
+                        <td>{{result.disk_path}}</td>
+                        <td>{{result.ip.ip}}</td>
+                        <td>{{result.disk_using_gb}} GB</td>
+                        <td>{{result.disk_using_percent}} </td>
+                    </tr>
+                    {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2><B>GPU</B></h2>
+            <table>
+                <thead>
+                    <tr>
+                        <td>Timestamp</td>
+                        <td>인덱스</td>
+                        <td>IP</td>
+                        <td>각 GPU 메모리 사용량(MB)</td>
+                        <td>각 GPU 메모리 사용량(%)</td>
+                    </tr>
+                </thead>
+                <tbody id="gpu">
+                    <!-- {% for result in gpu_result %}
+                    <tr>
+                        <td>{{result.created_at}}</td>
+                        <td>{{result.gpu_index}}</td>
+                        <td>{{result.ip.ip}}</td>
+                        <td>{{result.gpu_memory_using_mb}} MB</td>
+                        <td>{{result.gpu_memory_using_percent}} MB</td>
+                    </tr>
+                    {% endfor %} -->
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </body>
+
+<style>
+    div {
+        position: relative;
+        width: 100%;
+    }
+
+    table {
+        border: 1px solid black;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        height: fit-content;
+    }
+
+    tr,
+    td {
+        border: 1px solid black;
+    }
+
+    thead,
+    tbody {
+        text-align: center;
+    }
+
+    thead {
+        background-color: rgba(255, 222, 42);
+    }
+
+    h2 {
+        text-align: center;
+    }
+</style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
-    intervals()
+    // window.addEventListener('DOMContentLoaded', intervals)
+    $('#infoDiv').onload = intervals()
+
+    // select가 달라지면 컴포넌트 재로드
+    $('#client-select').on('change', function () {
+        $('#infoDiv').load(location.href + ' #infoDiv');
+    });
 
     function intervals() {
-        setInterval(update, 8000)
+        setInterval(update, 2000)
     }
 
     function update() {
@@ -113,28 +163,26 @@
             url: "http://127.0.0.1:8080/HW/load/",
             type: "get",
             dataType: "json",
+            data: { 'client': $('#client-select').val() },
 
             success: function (data) {
 
-                if (JSON.stringify(data) != '{}') {
+                // node
+                var node_table = data['node_result']
+                for (var i = 0; i < node_table.length; i++) {
+                    addRow("node", node_table[i])
+                }
 
-                    // node
-                    var node_table = data['node_result']
-                    for (var i = 0; i < node_table.length; i++) {
-                        console.log(node_table[i])
-                    }
+                // // disk
+                var disk_table = data['disk_result']
+                for (var i = 0; i < disk_table.length; i++) {
+                    addRow("disk", disk_table[i])
+                }
 
-                    // disk
-                    var disk_table = data['disk_result']
-                    for (var i = 0; i < disk_table.length; i++) {
-                        console.log(disk_table[i])
-                    }
-
-                    // gpu
-                    var gpu_table = data['gpu_result']
-                    for (var i = 0; i < gpu_table.length; i++) {
-                        console.log(gpu_table[i])
-                    }
+                // // gpu
+                var gpu_table = data['gpu_result']
+                for (var i = 0; i < gpu_table.length; i++) {
+                    addRow("gpu", gpu_table[i])
                 }
 
             },
@@ -145,6 +193,20 @@
         });
     }
 
+    function addRow(id, dict) {
+        // table element 찾기
+        const table = document.getElementById(id);
+
+        // 새 행(Row) 추가
+        const newRow = table.insertRow();
+
+        var idx = 0;
+        for (var key in dict) {
+            const newCell = newRow.insertCell(idx);
+            newCell.innerHTML = dict[key];
+            idx++;
+        }
+    }
 
 
 </script>

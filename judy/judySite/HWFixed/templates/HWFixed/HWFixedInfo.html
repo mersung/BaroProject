@@ -8,9 +8,9 @@
 
 <body>
     <div>
-        <h4 style="text-align: center;"><B>Node</B></h4>
-        <table border="1px" style="text-align: center;">
-            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+        <h2><B>Node</B></h2>
+        <table>
+            <thead>
                 <tr>
                     <td>IP</td>
                     <td>Hostname</td>
@@ -23,7 +23,7 @@
                     <td>CPU thread 수</td>
                 </tr>
             </thead>
-            <tbody style="text-align: center;">
+            <tbody>
                 {% for result in node_result %}
                 <tr>
                     <td>{{result.ip}}</td>
@@ -42,16 +42,16 @@
     </div>
 
     <div>
-        <h4 style="text-align: center;"><B>Disk</B></h4>
-        <table border="1px">
-            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+        <h2><B>Disk</B></h2>
+        <table>
+            <thead>
                 <tr>
                     <td>IP</td>
                     <td>디스크 경로</td>
                     <td>각 디스크 메모리 총량(GB)</td>
                 </tr>
             </thead>
-            <tbody style="text-align: center;">
+            <tbody>
                 {% for result in disk_result %}
                 <tr>
                     <td>{{result.ip.ip}}</td>
@@ -66,9 +66,9 @@
 
 
     <div>
-        <h4 style="text-align: center;"><B>GPU</B></h4>
-        <table border="1px">
-            <thead style="background-color: rgba(255, 222, 42); text-align: center;">
+        <h2><B>GPU</B></h2>
+        <table>
+            <thead>
                 <tr>
                     <td>IP</td>
                     <td>인덱스</td>
@@ -76,7 +76,7 @@
                     <td>각 GPU 메모리 총량(MB)</td>
                 </tr>
             </thead>
-            <tbody style="text-align: center;">
+            <tbody>
                 {% for result in gpu_result %}
                 <tr>
                     <td>{{result.ip.ip}}</td>
@@ -88,6 +88,40 @@
             </tbody>
         </table>
     </div>
+
+
+    <style>
+        div {
+            position: relative;
+            width: 100%;
+        }
+
+        table {
+            border: 1px solid black;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            height: fit-content;
+        }
+
+        tr,
+        td {
+            border: 1px solid black;
+        }
+
+        thead,
+        tbody {
+            text-align: center;
+        }
+
+        thead {
+            background-color: rgba(255, 222, 42);
+        }
+
+        h2 {
+            text-align: center;
+        }
+    </style>
 
 </body>
 

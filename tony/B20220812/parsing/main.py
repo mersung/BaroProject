@@ -163,36 +163,36 @@ class AdminDB:
                 self.makeSQL(table, l)
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    conn = pymysql.connect(host='localhost', user='root',
-                                password='baro', db='tony', charset='utf8')
-    cur = conn.cursor()
+#     conn = pymysql.connect(host='localhost', user='root',
+#                                 password='baro', db='tony', charset='utf8')
+#     cur = conn.cursor()
 
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
-                username="oem", password='baro')  # customer
+#     ssh = paramiko.SSHClient()
+#     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+#     ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+#                 username="oem", password='baro')  # customer
 
-    admindb = AdminDB(conn, cur, ssh)
+#     admindb = AdminDB(conn, cur, ssh)
     
 
-    try:
-        try:
-            admindb.fixed_insert_db()
-        except:
-            print("고정 정보는 한 번만 입력")
-        while True:
-            admindb.changed_insert_db()
-            time.sleep(2)
+#     try:
+#         try:
+#             admindb.fixed_insert_db()
+#         except:
+#             print("고정 정보는 한 번만 입력")
+#         while True:
+#             admindb.changed_insert_db()
+#             time.sleep(2)
 
-    except KeyboardInterrupt:
-        conn.close()
+#     except KeyboardInterrupt:
+#         conn.close()
 
-    except:
-        conn.close()
-        print("Wrong")
-    # stdin, stdout, stderr = ssh.exec_command('df -h')
-    # print(''.join(stdout.readlines()))
+#     except:
+#         conn.close()
+#         print("Wrong")
+#     # stdin, stdout, stderr = ssh.exec_command('df -h')
+#     # print(''.join(stdout.readlines()))
 
-    ssh.close()
+#     ssh.close()

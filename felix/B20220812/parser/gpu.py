@@ -57,7 +57,7 @@ class Gpu:
         stdin, stdout, stderr = self.ssh.exec_command("nvidia-smi -L")
         gpu_models = "".join(stdout.readlines()).strip().split('\n')
         # 노드 고정에 들어갈 총 메모리(MB)
-        total_gpu_memory_capacity_MB = 0
+        self.total_gpu_memory_capacity_MB = 0
 
         # gpu 고정에 들어갈 것들
         for i in range(number_of_gpu):
@@ -68,7 +68,7 @@ class Gpu:
             name: str = ' '.join(gpu_model.split()[2:-2])
             memory: int = int(gpu_memories[i*2].split(':')[-1].split()[0])
 
-            total_gpu_memory_capacity_MB += memory
+            self.total_gpu_memory_capacity_MB += memory
 
             gpu_fixed["gpu_index"] = i
             gpu_fixed["gpu_name"] = name
@@ -82,7 +82,7 @@ class Gpu:
         #total_gpu["total_gpu_memory_capacity_MB"] = total_gpu_memory_capacity_MB
         #노드 고정에 들어갈 총 gpu 용량 
         self.node_fixed_gpu_info.update(
-            {"total_gpu_memory_capacity_MB": total_gpu_memory_capacity_MB})
+            {"total_gpu_memory_capacity_MB": self.total_gpu_memory_capacity_MB})
         # gpus_fixed.append(total_gpu)
 
         # return gpus_fixed
@@ -120,7 +120,6 @@ class Gpu:
 
             using_percent: float = round(int(gpu_using_memories[i*2].split(':')[-1].split()[
                                          0])/int(gpu_memories[i*2].split(':')[-1].split()[0])*100, 3)
-            total_gpu_memory_using_percent += using_percent
 
             #GPU변함에 들어갈 데이터
             gpu_change["gpu_index"] = i
@@ -131,7 +130,7 @@ class Gpu:
             self.gpu_change_list.append(gpu_change)
             gpu_change = {}
         #노드_변함에 들어갈 총 사용량들
-        self.node_change_gpu_info["total_gpu_memory_using_percent"] = total_gpu_memory_using_percent
+        self.node_change_gpu_info["total_gpu_memory_using_percent"] = round((total_gpu_memory_using_MB/self.total_gpu_memory_capacity_MB)*100, 3)
         self.node_change_gpu_info["total_gpu_memory_using_MB"] = total_gpu_memory_using_MB
         # return gpus_change
 

@@ -1,18 +1,15 @@
-from curses import noecho
-from http import HTTPStatus
+from datetime import datetime
+from django.utils import timezone
 from django.shortcuts import render
 from django.http import HttpResponse
-import json
+from django.http import JsonResponse
 from .models import DiskChange, GpuChange, NodeChange, NodeFixed, DiskFixed, GpuFixed
 
 import pymysql
 import paramiko
-import time
 from DataParsig.main import AdminDB
 
 # Create your views here.
-
-change_table = None
 
 # ssh 변수
 ssh1 = None
@@ -20,9 +17,6 @@ ssh2 = None
 
 admindb1 = None
 admindb2 = None
-
-cur = None
-conn = None
 
 
 def index(request):
@@ -34,8 +28,6 @@ def HWFixedInfo(request):
     global admindb1
     global admindb2
 
-    global conn
-
     connectDB()
 
     try:
@@ -44,8 +36,7 @@ def HWFixedInfo(request):
         print("fixed insert done!")
 
     except:
-        conn.close()
-        print("Wrong")
+        print("FIXED Wrong")
 
     data = load_data(0)
 
@@ -53,77 +44,55 @@ def HWFixedInfo(request):
 
 
 def HWChangeInfo(request):
-    global admindb1
-    global admindb2
+    if (ssh1 != None):
+        ssh1.close()
 
-    global conn
+    if (ssh2 != None):
+        ssh2.close()
 
     connectDB()
-
-    try:
-        while(True):
-            admindb1.change_insert_db()
-            admindb2.change_insert_db()
-            print("fixed insert done!")
-
-            time.sleep(5)
-
-    except:
-        conn.close()
-        print("Wrong")
-
-    data = load_data(1)
-
-    return render(request, 'HWChange/HWChangeInfo.html', data)
+    return render(request, 'HWChange/HWChangeInfo.html')
 
 
 def load_refresh(request):
 
-    global change_table
+    client = request.GET.get('client')
+    global admindb1
+    global admindb2
 
-    data = {
-        'node_result': None,
-        'disk_result': None,
-        'gpu_result': None,
-    }
+    # print("[admindb1]: ", admindb1)
+    # print("[admindb2]: ", admindb2)
 
-    node_result = list(NodeChange.objects.all().order_by('created_at'))
-    disk_result = list(DiskChange.objects.all().order_by('create_at'))
-    gpu_result = list(GpuChange.objects.all().order_by('created_at'))
+    old_time = datetime.now()
 
-    if (change_table != None):
-        if (len(change_table['node_result']) < len(node_result)):
-            print("change_table_node: ", change_table['node_result'])
-            difference = len(node_result) - len(change_table['node_result'])
+    # 데이터 넣기
+    admindb1.changed_insert_db()
+    admindb2.changed_insert_db()
 
-            for i in range(difference):
-                data['node_result'].append(node_result.pop())
-
-            change_table['node_result'] = node_result
-
-        if (len(change_table['disk_result']) < len(disk_result)):
-            difference = len(disk_result) - len(change_table['disk_result'])
-
-            for i in range(difference):
-                data['disk_result'].append(disk_result.pop())
-
-            change_table['disk_result'] = disk_result
-
-        if (len(change_table['gpu_result']) < len(gpu_result)):
-            difference = len(gpu_result) - len(change_table['gpu_result'])
-
-            for i in range(difference):
-                data['gpu_result'].append(gpu_result.pop())
-
-            change_table['gpu_result'] = gpu_result
-
-        print(data)
+    # 데이터 갖고오기
+    if (client != 'All Client'):
+        node_result = list(NodeChange.objects.all().filter(
+            created_at__gt=old_time, ip=client).order_by('created_at').values())
+        disk_result = list(DiskChange.objects.all().filter(
+            create_at__gt=old_time, ip=client).order_by('create_at').values())
+        gpu_result = list(GpuChange.objects.all().filter(
+            created_at__gt=old_time, ip=client).order_by('created_at').values())
 
     else:
-        print("Change Table is None!")
-        return HttpResponse(HTTPStatus.CONFLICT)
+        node_result = list(NodeChange.objects.all().filter(
+            created_at__gt=old_time).order_by('created_at').values())
+        disk_result = list(DiskChange.objects.all().filter(
+            create_at__gt=old_time).order_by('create_at').values())
+        gpu_result = list(GpuChange.objects.all().filter(
+            created_at__gt=old_time).order_by('created_at').values())
 
-    return HttpResponse(json.dumps(data, default=str), content_type="application/json")
+    data = {
+        'node_result': node_result,
+        'gpu_result': gpu_result,
+        'disk_result': disk_result
+    }
+
+    return HttpResponse(JsonResponse(data), content_type="application/json")
 
 
 def load_data(mode):
@@ -151,9 +120,6 @@ def load_data(mode):
             'gpu_result': gpu_result
         }
 
-        global change_table
-        change_table = data
-
         return data
 
     else:
@@ -169,9 +135,6 @@ def connectDB():
     global admindb1
     global admindb2
 
-    global cur
-    global conn
-
     # 웹페이지에 들어가는 순간 값 받기 시작
     conn = pymysql.connect(host='localhost', user='root',
                                 password='baro', db='judy', charset='utf8')
@@ -179,12 +142,12 @@ def connectDB():
 
     ssh1 = paramiko.SSHClient()
     ssh1.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh1.connect("192.168.20.114", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+    ssh1.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
                  username="oem", password='baro')  # customer
 
     ssh2 = paramiko.SSHClient()
     ssh2.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh2.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
+    ssh2.connect("192.168.20.114", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
                  username="oem", password='baro')  # customer
 
     admindb1 = AdminDB(conn, cur, ssh1)

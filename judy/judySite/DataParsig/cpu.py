@@ -63,11 +63,18 @@ class CPU:
             # top -n2 -d 0.0000000001 | grep "Cpu(s)" | tail -1
             # 터미널 이용하면 앞에 이상한 바이너리가 붙어서 온다. 이를 삭제해 줘야한다.
             # top은 두번째 실행부터 제대로된 값을 뱉는데.. 이렇게 하는게 맞는지 의문임.
-            usable_cpu = round(float(os.popen("top -n2 -d 0.00001 | grep 'Cpu(s)' | tail -1").read(
-            ).split(",")[3].replace("\x1b(B\x1b[m\x1b[39;49m\x1b[1m", "").split()[0]), 3)
+            # usable_cpu = round(float(os.popen("top -n2 -d 0.00001 | grep 'Cpu(s)' | tail -1").read().split(",")[3].replace("\x1b(B\x1b[m\x1b[39;49m\x1b[1m", "").split()[0]), 3)
+            # 원격접속 sudo apt-get install sysstat 필요.
+            # mpstat 1 1 도 가능함. 1초간격으로 1번
+            stdin, stdout, stderr = self.ssh.exec_command(
+                "sar -u 1 1 | tail  -1")
+            usable_cpu: float = round(
+                float(''.join(stdout.readlines()).split()[-1]), 3)
+            # print(usable_cpu)
             # print("usablse :",usable_cpu)
         except:
-            raise Exception("changed_data: shell 명령어 입력 에러")
+            # raise Exception("changed_data: shell 명령어 입력 에러")
+            print("[Error]: CPU 캐싱 못함")
         # 사용 가능한 CPU 사용량(%)
         using_cpu = round(100 - usable_cpu, 3)
 
@@ -81,15 +88,3 @@ class CPU:
         for c in self.changed_cpu_info.values():
             s += str(c) + "\n"
         return s
-
-
-if __name__ == "__main__":
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.114", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
-                username="oem", password='baro')  # customer
-    cpu = CPU(ssh)
-    while True:
-        cpu.changed_data()
-        time.sleep(0.5)
-        print(cpu)

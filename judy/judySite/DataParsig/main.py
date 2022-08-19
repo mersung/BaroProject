@@ -243,38 +243,3 @@ class AdminDB:
         c_list.append(self.extractDB("GPU_CHANGE"))
 
         return c_list
-
-
-if __name__ == "__main__":
-
-    conn = pymysql.connect(host='localhost', user='root',
-                                password='baro', db='judy', charset='utf8')
-    cur = conn.cursor()
-
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect("192.168.20.115", port='22',  # 고객이 자신의 ip를 안다고 가정하에 '115'부분을 바꿈, 그러면 고객의 node에서 115로 가져올 수 있음, 지금은 115로 자기자신과 연결
-                username="oem", password='baro')  # customer
-
-    admindb = AdminDB(conn, cur, ssh)
-
-    # stdin, stdout, stderr = ssh.exec_command('df -h')
-    # print(''.join(stdout.readlines()))
-
-    try:
-        admindb.fixed_insert_db()
-        while True:
-            admindb.changed_insert_db()
-            time.sleep(5)
-
-    except KeyboardInterrupt:
-        conn.close()
-
-    except:
-        conn.close()
-        print("Wrong")
-
-    # admindb.get_fixed_DB()
-    # admindb.get_change_DB()
-
-    ssh.close()

@@ -15,11 +15,20 @@
         h1{
             text-align: center;
         }
+        progress {
+            width: 300px;
+            height: 25px;
+        }
 
     </style>
 </head>
 <body>
     <span id="ip">{{ ip }}</span>
+    <div>
+        <progress value="50" max="100" id="total_gpu"></progress> <span id="total_gpu_s"></span> 총 GPU 사용량(%) <br>
+        <progress value="50" max="100" id="total_memory"></progress> <span id="total_memory_s"></span> 총 memory 사용량(%) <br>
+        <progress value="50" max="100" id="total_cpu"></progress> <span id="total_cpu_s"></span> 총 CPU 사용량(%) <br>
+    </div>
     <div>
         <h1>NodeChange 정보</h1>
         <table id="node_table">
@@ -114,6 +123,7 @@
         var node_cnt = 0;
         var disk_cnt = 0;
         var gpu_cnt = 0;
+        // post 사용시 필요
         $.ajaxSetup({
              headers: { "X-CSRFToken": '{{csrf_token}}' }
         });
@@ -125,6 +135,7 @@
                 data: {"ip": $('#ip').html()},
                 success:function(response) {
                     console.log("data success", response);
+                    // 노드 표 삽입
                     $('#node_table').append(`<tr id="node_${node_cnt}" align="center"></tr>`);
                     $('#node_' + (node_cnt)).append(`<td>${response['node']['created_at']}</td>`);
                     $('#node_' + (node_cnt)).append(`<td>${response['node']['ip_id']}</td>`);
@@ -138,6 +149,19 @@
                     $('#node_' + (node_cnt)).append(`<td>${response['node']['free_cpu_percent']}</td>`);
                     node_cnt += 1;
 
+                    // gpu 사용률 progressbar
+                    $('#total_gpu').attr("value", `${response['node']['total_gpu_memory_using_percent']}`);
+                    $('#total_gpu_s').text(`${response['node']['total_gpu_memory_using_percent']}%`);
+
+                    // memory 사용률 progressbar
+                    $('#total_memory').attr("value", `${response['node']['total_memory_using_percent']}`);
+                    $('#total_memory_s').text(`${response['node']['total_memory_using_percent']}%`);
+
+                    // cpu 사용률 progressbar
+                    $('#total_cpu').attr("value", `${response['node']['total_cpu_using_percent']}`);
+                    $('#total_cpu_s').text(`${response['node']['total_cpu_using_percent']}%`);
+
+                    // 디스크 표 삽입
                     for(var l=0; l<response['disks'].length; l++) {
                         $('#disk_table').append(`<tr id="disk_${disk_cnt}" align="center"></tr>`);
                         $('#disk_'+(disk_cnt)).append(`<td>${response['disks'][l]['created_at']}</td>`);
@@ -148,6 +172,7 @@
                         disk_cnt += 1;
                     }
 
+                    // gpu 표 삽입
                     for(var l=0; l<response['gpus'].length; l++) {
                         $('#gpu_table').append(`<tr id="gpu_${gpu_cnt}" align="center"></tr>`);
                         $('#gpu_'+(gpu_cnt)).append(`<td>${response['gpus'][l]['created_at']}</td>`);
@@ -162,7 +187,7 @@
                     console.log(xhr.status + ": " + xhr.responseText);
                 }
             })
-        }, 3000)
+        }, 2000)
     </script>
 </body>
 </html>
