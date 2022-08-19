@@ -73,8 +73,8 @@ class CPU:
             # print(usable_cpu)
             # print("usablse :",usable_cpu)
         except:
-            # raise Exception("changed_data: shell 명령어 입력 에러")
-            print("[Error]: CPU 캐싱 못함")
+            raise Exception("changed_data: shell 명령어 입력 에러")
+            # print("[Error]: CPU 캐싱 못함")
         # 사용 가능한 CPU 사용량(%)
         using_cpu = round(100 - usable_cpu, 3)
 

@@ -65,9 +65,13 @@ def load_refresh(request):
 
     old_time = datetime.now()
 
-    # 데이터 넣기
-    admindb1.changed_insert_db()
-    admindb2.changed_insert_db()
+    try:
+        # 데이터 넣기
+        admindb1.changed_insert_db()
+        admindb2.changed_insert_db()
+
+    except:
+        print("Change 데이터 넣기 실패")
 
     # 데이터 갖고오기
     if (client != 'All Client'):
