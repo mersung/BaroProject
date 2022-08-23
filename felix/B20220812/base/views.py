@@ -48,7 +48,7 @@ def fixed(request):
     # 없을경우 컴퓨터에서 새로 가져와 저장함
     if len(node) == 0:
         # nodefixed 가져와서 저장
-        print(admindb.node_fixed_table)
+        # print(admindb.node_fixed_table)
         node = NodeFixedForm(admindb.node_fixed_table)
         if node.is_valid():
             node.save()
@@ -103,17 +103,16 @@ def changed(request):
         ip = request.GET.get("ip")
         return render(request, 'base/changed.html', {"ip": ip})
 
-    # ip를 받지 않았을 때
-    if "ip" not in request.POST:
-        print("test")
-        return HttpResponse("no ip in post", status=400)
-
-    ip = request.POST.get("ip")
-    ssh = get_ssh(ip)
-    admindb = AdminDB(ssh)
-
     # post 방식으로 오면 JsonResponse 리턴
     if request.method == "POST":
+
+        # ip를 받지 않았을 때
+        if "ip" not in request.POST:
+            return HttpResponse("no ip in post", status=400)
+
+        ip = request.POST.get("ip")
+        ssh = get_ssh(ip)
+        admindb = AdminDB(ssh)
         
         """
         node_changed_table
@@ -132,6 +131,7 @@ def changed(request):
         }
         """
 
+        # now = time.time()
         # NodeChanged 저장후 가장 최근거 불러오기
         node = NodeChangedForm(admindb.node_change_table)
         # 클라이언트가 동시실행시 값을 더 많이 가져오는 문제가 발생할 수 있음.
@@ -175,6 +175,7 @@ def changed(request):
         # node: { ... },
         # disks: [{ ... }, { ... }]
         # gpus: [{ ... }, { ... }]
+        # print(time.time() - now)
         return JsonResponse(context)
 
     return HttpResponse("bad")

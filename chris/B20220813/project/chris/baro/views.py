@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 from django.http import JsonResponse
-import json
+from datetime import datetime
 
 from .models import NodeFixed
 from .models import NodeChange
@@ -59,14 +59,12 @@ except :
 
 # Create your views here.
 def index(request):
+    now = datetime.now()
     if request.method == "GET":
         nodeFixed = NodeFixed.objects.all()
-        nodeChange = NodeChange.objects.all()
-        gpuChange = GpuChange.objects.all()
         gpuFixed = GpuFixed.objects.all()
-        diskChange = DiskChange.objects.all()
         diskFixed = DiskFixed.objects.all()
-        return render(request, 'index.html', {"nodeFixed" : nodeFixed, "nodeChange" : nodeChange, "gpuChange" : gpuChange, "gpuFixed" : gpuFixed, "diskChange" : diskChange, "diskFixed" : diskFixed})
+        return render(request, 'index.html', {"nodeFixed" : nodeFixed, "gpuFixed" : gpuFixed, "diskFixed" : diskFixed})
 
     if request.method == "POST":
         try:
@@ -78,23 +76,16 @@ def index(request):
         except :
             pass
 
-    nodeFixed = NodeFixed.objects.all()
-    nodeChange = NodeChange.objects.all()
-    nodeChange = list(nodeChange.values()).pop()
 
-    gpuChange = GpuChange.objects.all()
-    gpuChange = list(gpuChange.values()).pop()
-    
-    gpuFixed = GpuFixed.objects.all()
-    diskChange = DiskChange.objects.all()
-    diskChange = list(diskChange.values()).pop()
-
-    diskFixed = DiskFixed.objects.all()
+    nodeChange = (list(NodeChange.objects.all().filter(created_at__gt=now).values()))
+    gpuChange = (list(GpuChange.objects.all().filter(created_at__gt=now).values()))
+    diskChange = (list(DiskChange.objects.all().filter(create_at__gt=now).values()))
 
     data = {
         "nodeChange" : nodeChange, 
         "gpuChange" : gpuChange, 
         "diskChange" : diskChange, 
     }
+
     return HttpResponse(JsonResponse(data), content_type="application/json")
 

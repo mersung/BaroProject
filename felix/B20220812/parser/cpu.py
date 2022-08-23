@@ -51,6 +51,7 @@ class CPU:
 
     # cpu 변동 정보
     def changed_data(self):
+        # now = time.time()
         # 총 CPU 사용량(%)
         # total_cpu_using_percent: float = round(psutil.cpu_percent(), 3)
         try:
@@ -72,6 +73,7 @@ class CPU:
 
         self.changed_cpu_info["total_cpu_using_percent"] = using_cpu
         self.changed_cpu_info["free_cpu_percent"] = usable_cpu
+        # print(time.time()-now)
 
     def __str__(self):
         s = ""

@@ -1,12 +1,10 @@
 from copy import deepcopy
 from datetime import datetime
-from ipaddress import ip_address
 
 from django.shortcuts import render
 
 from django.http import JsonResponse
 from django.http import HttpResponse
-import json
 
 from .models import NodeFixed
 from .models import NodeChange
@@ -15,12 +13,7 @@ from .models import GpuFixed
 from .models import DiskChange
 from .models import DiskFixed
 
-from parsing.node import Node
-from parsing.cpu import CPU
-from parsing.disk import Disk
-from parsing.gpu import Gpu
 from parsing.main import AdminDB
-import time
 import pymysql
 import paramiko
 

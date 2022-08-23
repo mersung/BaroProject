@@ -92,7 +92,7 @@ class AdminDB:
     def changed_insert_db(self):
         self.mergeChangeKey()
 
-        print("+++++++++++++++++++++++ Changed 값 ++++++++++++++++++++++")
+        #print("+++++++++++++++++++++++ Changed 값 ++++++++++++++++++++++")
 
         # Node
         self.insertDB("NODE_CHANGE", self.node_change_table)
@@ -103,11 +103,11 @@ class AdminDB:
         # GPU
         self.insertDB("GPU_CHANGE", self.gpu_changed_table)
 
-        print("=================================")
+        #print("=================================")
 
     def fixed_insert_db(self):
 
-        print("+++++++++++++++++++++++ fixed 값 ++++++++++++++++++++++")
+        #print("+++++++++++++++++++++++ fixed 값 ++++++++++++++++++++++")
 
         # Node
         self.insertDB("NODE_FIXED", self.node_fixed_table)
@@ -145,7 +145,7 @@ class AdminDB:
         sql = "INSERT INTO " + table + columns_str + ") VALUES " + values_str + ")"
 
         # DB Insert execute
-        print(sql)
+        #print(sql)
         self.cur.execute(sql)
         self.conn.commit()
 

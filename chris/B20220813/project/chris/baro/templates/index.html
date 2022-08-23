@@ -30,37 +30,43 @@
             url: "http://127.0.0.1:8000",
             data: {},
             success: function(response){
-                console.log(response)
-                $('#nodeChangeTable').append(`<tr id = "nodeChange`+(++i)+`"></tr>` )
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].created_at}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].ip}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].total_gpu_memory_using_percent}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].total_gpu_memory_using_mb}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].free_disk_gb}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].free_memory_gb}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].free_disk_percent}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].total_memory_using_percent}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].total_cpu_using_percent}</td>`);
-                $('#nodeChange'+(i)).append(`<td>${response['nodeChange'].free_cpu_percent}</td>`);  
-
-                $('#diskChangeTable').append(`<tr id = "diskChange`+(++i)+`"></tr>` )
-                $('#diskChange'+(i)).append(`<td>${response['diskChange'].create_at}</td>`);
-                $('#diskChange'+(i)).append(`<td>${response['diskChange'].disk_path_id}</td>`);
-                $('#diskChange'+(i)).append(`<td>${response['diskChange'].ip_id}</td>`);
-                $('#diskChange'+(i)).append(`<td>${response['diskChange'].disk_using_gb}</td>`);
-                $('#diskChange'+(i)).append(`<td>${response['diskChange'].disk_using_percent}</td>`);
-
-                $('#gpuChangeTable').append(`<tr id = "gpuChange`+(++i)+`"></tr>` )
-                $('#gpuChange'+(i)).append(`<td>${response['gpuChange'].created_at}</td>`);
-                $('#gpuChange'+(i)).append(`<td>${response['gpuChange'].gpu_index_id}</td>`);
-                $('#gpuChange'+(i)).append(`<td>${response['gpuChange'].ip_id}</td>`);
-                $('#gpuChange'+(i)).append(`<td>${response['gpuChange'].gpu_memory_using_mb}</td>`);
-                $('#gpuChange'+(i)).append(`<td>${response['gpuChange'].gpu_memory_using_percent}</td>`);
-
-
-            }
+                // console.log(response)
+                console.log(response['nodeChange'].length)
+                for(var l =0; l<response['nodeChange'].length; l++){
+                        $('#nodeChangeTable').append(`<tr id = "nodeChange`+(++i)+`"></tr>` )
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].created_at}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].ip_id}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].total_gpu_memory_using_percent}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].total_gpu_memory_using_mb}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].free_disk_gb}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].free_memory_gb}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].free_disk_percent}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].total_memory_using_percent}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].total_cpu_using_percent}</td>`);
+                        $('#nodeChange'+(i)).append(`<td>${response['nodeChange'][l].free_cpu_percent}</td>`);  
+                    }
+                    
+    
+                    for(var l = 0; l<response['diskChange'].length; l++){
+                        $('#diskChangeTable').append(`<tr id = "diskChange`+(++i)+`"></tr>` )
+                        $('#diskChange'+(i)).append(`<td>${response['diskChange'][l].create_at}</td>`);
+                        $('#diskChange'+(i)).append(`<td>${response['diskChange'][l].disk_path_id}</td>`);
+                        $('#diskChange'+(i)).append(`<td>${response['diskChange'][l].ip_id}</td>`);
+                        $('#diskChange'+(i)).append(`<td>${response['diskChange'][l].disk_using_gb}</td>`);
+                        $('#diskChange'+(i)).append(`<td>${response['diskChange'][l].disk_using_percent}</td>`);
+                    }
+                    
+                    for(var l = 0; l<response['gpuChange'].length; l++){
+                        $('#gpuChangeTable').append(`<tr id = "gpuChange`+(++i)+`"></tr>` )
+                        $('#gpuChange'+(i)).append(`<td>${response['gpuChange'][l].created_at}</td>`);
+                        $('#gpuChange'+(i)).append(`<td>${response['gpuChange'][l].gpu_index_id}</td>`);
+                        $('#gpuChange'+(i)).append(`<td>${response['gpuChange'][l].ip_id}</td>`);
+                        $('#gpuChange'+(i)).append(`<td>${response['gpuChange'][l].gpu_memory_using_mb}</td>`);
+                        $('#gpuChange'+(i)).append(`<td>${response['gpuChange'][l].gpu_memory_using_percent}</td>`);
+                    }
+                }
         })
-        }, 5000);
+        }, 3000);
     })
 
     </script>

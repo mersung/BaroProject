@@ -143,7 +143,6 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
-    // window.addEventListener('DOMContentLoaded', intervals)
     $('#infoDiv').onload = intervals()
 
     // select가 달라지면 컴포넌트 재로드
@@ -156,41 +155,47 @@
     }
 
     function update() {
+        return new Promise(function (resolve, reject) {
 
-        console.log("Update")
+            $.ajax({
+                url: "http://127.0.0.1:8080/HW/load/",
+                type: "get",
+                dataType: "json",
+                data: { 'client': $('#client-select').val() },
 
-        $.ajax({
-            url: "http://127.0.0.1:8080/HW/load/",
-            type: "get",
-            dataType: "json",
-            data: { 'client': $('#client-select').val() },
+                success: function (data) {
 
-            success: function (data) {
+                    console.log("Update")
 
-                // node
-                var node_table = data['node_result']
-                for (var i = 0; i < node_table.length; i++) {
-                    addRow("node", node_table[i])
-                }
+                    // node
+                    var node_table = data['node_result']
+                    for (var i = 0; i < node_table.length; i++) {
+                        addRow("node", node_table[i])
+                    }
 
-                // // disk
-                var disk_table = data['disk_result']
-                for (var i = 0; i < disk_table.length; i++) {
-                    addRow("disk", disk_table[i])
-                }
+                    // // disk
+                    var disk_table = data['disk_result']
+                    for (var i = 0; i < disk_table.length; i++) {
+                        addRow("disk", disk_table[i])
+                    }
 
-                // // gpu
-                var gpu_table = data['gpu_result']
-                for (var i = 0; i < gpu_table.length; i++) {
-                    addRow("gpu", gpu_table[i])
-                }
+                    // // gpu
+                    var gpu_table = data['gpu_result']
+                    for (var i = 0; i < gpu_table.length; i++) {
+                        addRow("gpu", gpu_table[i])
+                    }
 
-            },
+                    resolve("Resolve");
 
-            error: function (xhr, errmsg, err) {
-                console.log(xhr.status + ": " + xhr.responseText);
-            },
-        });
+                },
+
+                error: function (xhr, errmsg, err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+                },
+            });
+
+        })
+
     }
 
     function addRow(id, dict) {
