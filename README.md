@@ -106,13 +106,37 @@
     
 #
 
+####
+2022-08-17 ~ 2022-08-23
+
+    심대성(tony) : url 요청에 의해 views.py에서 모듈화 해놓은 python 코드 실행, 데이터 삽입 후 VIEW로 json데이터 전달 확인, 오류 수정
+                  실시간으로 데이터 삽입, 비동기 처리(Ajax)방식 사용하여 새로고침 없이 실시간 데이터 VIEW로 출력 성공 
+                  관리자 입장에서 볼 수 있도록 IP를 나눠서 출력
+
+    이아연(judy) : Django 이용한 백엔드 구성, html, ajax를 통한 프론트엔드 구성
+
+    김용후(felix) : Django db 설정, views 작성, 파싱코드와 django 서버 연결
+                    ssh 연결 재설정, html 작성, 데이터 올바르게 전달되는지 확인, 각종 오류 수정, 예외처리
+                    실시간으로 데이터 삽입, 비동기 처리(Ajax)방식 사용하여 새로고침 없이 실시간 데이터 출력 성공
+                    프로그래스 바를 이용하여 cpu, gpu, memory 상태 출력
+
+    이승준(bumstead) : COVID-19 감염
+
+    이원형(chris) : Django MVC 연결 및 view 초안 출력
+                    Changed Data 실시간 출력
+                    다중 Node 입력 처리
+                    예외처리 및 싱크 맞추기
+    
+#
+
+
 ## models.py 일부(테이블 생성)
 
 ![image](https://user-images.githubusercontent.com/86938974/184829408-c9af4e9d-b203-47a0-8ff0-9b875e973d67.png)
 
 ## 뷰와 url 연결 (urls.py 세팅)
 
-![image](https://user-images.githubusercontent.com/86938974/184829688-fb55e631-f626-4748-b053-666f311f9474.png)
+![image](image/url.png)
 
 ## html에 데이터 전달(views.py)
 
@@ -122,4 +146,6 @@
 
 ![image](https://user-images.githubusercontent.com/86938974/184830137-b161ace0-beb5-48ab-afa1-98410128a1ed.png)
 
+## Ajax 비동기 처리(실시간 데이터 출력용)
 
+![image](image/ajax.png)

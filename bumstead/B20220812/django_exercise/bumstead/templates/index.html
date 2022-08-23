@@ -7,7 +7,6 @@
 <body>
     <tr>
         <td><B>퇴근시켜줘퇴근시켜줘퇴근시켜줘퇴근시켜줘</B></td>
-        <td><B>코로나를 이겨내는 BUMSTEAD</B></td>
     </tr>
     <div>
         <h1>NODE_FIXED</h1>
@@ -58,7 +57,7 @@
             {% for node in nodeChange %}
             <tr>
                 <td>{{node.created_at}}</td>
-                <td>{{node.ip}}</td>
+                <td>{{node.ip.ip}}</td>
                 <td>{{node.total_gpu_memory_using_percent}}</td>
                 <td>{{node.total_gpu_memory_using_mb}}</td>
                 <td>{{node.free_disk_gb}}</td>
@@ -103,7 +102,6 @@
             {% for disks in diskChange %}
             <tr align="center">
                 <td>{{disks.create_at}}</td>
-                <td>{{disks.disk_path}}</td>
                 <td>{{disks.ip}}</td>
                 <td>{{disks.disk_using_gb}}</td>
                 <td>{{disks.disk_using_percent}}</td>
