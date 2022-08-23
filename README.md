@@ -136,7 +136,7 @@
 
 ## 뷰와 url 연결 (urls.py 세팅)
 
-![image](image/url.png)
+![image](tony/image/url.png)
 
 ## html에 데이터 전달(views.py)
 
@@ -148,4 +148,4 @@
 
 ## Ajax 비동기 처리(실시간 데이터 출력용)
 
-![image](image/ajax.png)
+![image](tony/image/ajax.png)
