@@ -10,7 +10,7 @@
 #
 ## 팀원소개
 ***
-    심대성(Tony), 김용후(Felix), 이아연(Judy), 이승준(Bumstead), 이원형(Chris)
+    심OO(Tony), 김OO(Felix), 이OO(Judy), 이OO(Bumstead), 이OO(Chris)
 #
 ## 프로젝트 기간
 ***
