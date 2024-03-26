@@ -27,25 +27,25 @@
 ####
 2022-08-08
 
-    심대성(tony) : Node 고정, Node 변함 ERD 구상, 작성
+    심OO(tony) : Node 고정, Node 변함 ERD 구상, 작성
     
-    이아연(judy) : Disk 고정, Disk 변함 ERD 구상, 작성
+    이OO(judy) : Disk 고정, Disk 변함 ERD 구상, 작성
     
-    김용후(felix) : Cpu, Gpu 고정, Gpu 변화 ERD 구상, 파싱코드, 작성
+    김OO(felix) : Cpu, Gpu 고정, Gpu 변화 ERD 구상, 파싱코드, 작성
 #
 
 ####
 2022-08-09
     
-    심대성(tony) : GPU 클래스,모듈화
+    심OO(tony) : GPU 클래스,모듈화
     
-    이아연(judy) : Disk 클래스,모듈화
+    이OO(judy) : Disk 클래스,모듈화
     
-    김용후(felix) : CPU 클래스,모듈화
+    김OO(felix) : CPU 클래스,모듈화
 
-    이승준(bumstead) : Node 변화 클래스,모듈화
+    이OO(bumstead) : Node 변화 클래스,모듈화
 
-    이원형(chris) : Node 고정 클래스,모듈화
+    이OO(chris) : Node 고정 클래스,모듈화
      
     
 #
@@ -53,76 +53,76 @@
 ####
 2022-08-10
 
-    심대성(tony) : GPU 클래스, 모듈화 수정, 테이블 수정, 오류 수정
+    심OO(tony) : GPU 클래스, 모듈화 수정, 테이블 수정, 오류 수정
     
-    이아연(judy) : Admin DB 클래스 생성 후, __init__, mergeKey()작성, 고정 데이터 저장
+    이OO(judy) : Admin DB 클래스 생성 후, __init__, mergeKey()작성, 고정 데이터 저장
      
-    김용후(felix) : CPU 클래스, 모듈화 수정, 테이블 수정, 오류 수정
+    김OO(felix) : CPU 클래스, 모듈화 수정, 테이블 수정, 오류 수정
 
-    이승준(bumstead) : Node 변화 클래스,모듈화, makeSQL(), insert DB()작성
+    이OO(bumstead) : Node 변화 클래스,모듈화, makeSQL(), insert DB()작성
 
-    이원형(chris) : Node 고정 클래스,모듈화, makeSQL(), insert DB()작성
+    이OO(chris) : Node 고정 클래스,모듈화, makeSQL(), insert DB()작성
 
 #
 
 ####
 2022-08-11 
 
-    심대성(tony) : ssh 연결을 위한 data parsing 재작업
+    심OO(tony) : ssh 연결을 위한 data parsing 재작업
     
-    이아연(judy) : ssh 연결을 위한 data parsing 재작업
+    이OO(judy) : ssh 연결을 위한 data parsing 재작업
      
-    김용후(felix) : ssh 연결을 위한 data parsing 재작업
+    김OO(felix) : ssh 연결을 위한 data parsing 재작업
 
-    이승준(bumstead) : ssh 연결을 위한 data parsing 재작업
+    이OO(bumstead) : ssh 연결을 위한 data parsing 재작업
 
-    이원형(chris) : ssh 연결을 위한 data parsing 재작업
+    이OO(chris) : ssh 연결을 위한 data parsing 재작업
 
 #
 
 ####
 2022-08-12
 
-    심대성(tony) : Django 연결 및 models.py 작성
+    심OO(tony) : Django 연결 및 models.py 작성
     
-    이아연(judy) : Django 연결 및 models.py 작성
+    이OO(judy) : Django 연결 및 models.py 작성
      
-    김용후(felix) : Django 연결 및 models.py 작성
+    김OO(felix) : Django 연결 및 models.py 작성
 
-    이승준(bumstead) : Django 연결 및 models.py 작성
+    이OO(bumstead) : Django 연결 및 models.py 작성
 
-    이원형(chris) : Django 연결 및 models.py 작성
+    이OO(chris) : Django 연결 및 models.py 작성
 
 #
 
 ####
 2022-08-16
 
-    심대성(tony) : Django MVC 연결 및 view 초안 출력 
+    심OO(tony) : Django MVC 연결 및 view 초안 출력 
 
-    이승준(bumstead) : Django MVC 연결 및 view 초안 출력 
+    이OO(bumstead) : Django MVC 연결 및 view 초안 출력 
 
-    이원형(chris) : Django MVC 연결 및 view 초안 출력 
+    이OO(chris) : Django MVC 연결 및 view 초안 출력 
     
 #
 
 ####
 2022-08-17 ~ 2022-08-23
 
-    심대성(tony) : url 요청에 의해 views.py에서 모듈화 해놓은 python 코드 실행, 데이터 삽입 후 VIEW로 json데이터 전달 확인, 오류 수정
+    심OO(tony) : url 요청에 의해 views.py에서 모듈화 해놓은 python 코드 실행, 데이터 삽입 후 VIEW로 json데이터 전달 확인, 오류 수정
                   실시간으로 데이터 삽입, 비동기 처리(Ajax)방식 사용하여 새로고침 없이 실시간 데이터 VIEW로 출력 성공 
                   관리자 입장에서 볼 수 있도록 IP를 나눠서 출력
 
-    이아연(judy) : Django 이용한 백엔드 구성, html, ajax를 통한 프론트엔드 구성
+    이OO(judy) : Django 이용한 백엔드 구성, html, ajax를 통한 프론트엔드 구성
 
-    김용후(felix) : Django db 설정, views 작성, 파싱코드와 django 서버 연결
+    김OO(felix) : Django db 설정, views 작성, 파싱코드와 django 서버 연결
                     ssh 연결 재설정, html 작성, 데이터 올바르게 전달되는지 확인, 각종 오류 수정, 예외처리
                     실시간으로 데이터 삽입, 비동기 처리(Ajax)방식 사용하여 새로고침 없이 실시간 데이터 출력 성공
                     프로그래스 바를 이용하여 cpu, gpu, memory 상태 출력
 
-    이승준(bumstead) : COVID-19 감염
+    이OO(bumstead) : COVID-19 감염
 
-    이원형(chris) : Django MVC 연결 및 view 초안 출력
+    이OO(chris) : Django MVC 연결 및 view 초안 출력
                     Changed Data 실시간 출력
                     다중 Node 입력 처리
                     예외처리 및 싱크 맞추기
